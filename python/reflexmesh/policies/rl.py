@@ -94,6 +94,22 @@ def train_ppo(directory, timesteps=16384, seed=29):
         "training_seconds": time.perf_counter() - start,
         "environment": "real disposable software with native admission",
         "recurrent": False,
+        "fit_configuration": {
+            "n_steps": model.n_steps,
+            "batch_size": model.batch_size,
+            "n_epochs": model.n_epochs,
+            "learning_rate": model.learning_rate,
+            "gamma": model.gamma,
+            "gae_lambda": model.gae_lambda,
+            "ent_coef": model.ent_coef,
+            "vf_coef": model.vf_coef,
+            "max_grad_norm": model.max_grad_norm,
+            "clip_range": model.clip_range(1.0),
+            "normalize_advantage": model.normalize_advantage,
+            "policy_kwargs": model.policy_kwargs,
+            "optimizer": model.policy.optimizer.__class__.__name__,
+        },
+        "training_spec_ids": [spec.episode_id for spec in environment.specs],
     }
     (Path(directory) / "ppo-training.json").write_text(
         json.dumps(result, indent=2), encoding="utf8"

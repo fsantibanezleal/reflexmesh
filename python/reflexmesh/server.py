@@ -308,7 +308,7 @@ def create_app(
     async def workspace_recovery():
         try:
             return configured_workspace().recovery()
-        except RuntimeError:
+        except (ValueError, RuntimeError, OSError):
             raise HTTPException(409, "workspace busy or journal unavailable") from None
 
     @app.post("/api/workspace/reconcile")

@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
+import stat
 import threading
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -25,6 +27,60 @@ def wire(value: Any) -> str:
 
 class AdmissionError(ValueError):
     """A tool cannot be admitted under its concrete local authority."""
+
+
+class _JournalOwnership:
+    """Nonblocking OS ownership for one cooperating runtime per journal.
+
+    The sidecar inode is retained on close. Deleting a live sidecar would allow
+    another owner to lock a different inode. Locks are released by the OS after
+    process termination. This is a local-filesystem coordination boundary, not
+    protection against an actor able to replace journal/lock files.
+    """
+
+    def __init__(self, journal: Path):
+        self.path = journal.with_name(journal.name + ".owner.lock")
+        self._stream = None
+        if journal.exists() and journal.stat().st_nlink != 1:
+            raise AdmissionError("journal hardlink aliases cannot have independent ownership")
+        if self.path.is_symlink():
+            raise AdmissionError("journal ownership lock cannot be a symbolic link")
+        flags = os.O_CREAT | os.O_RDWR | getattr(os, "O_NONBLOCK", 0)
+        flags |= getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NOINHERIT", 0)
+        descriptor = os.open(self.path, flags, 0o600)
+        try:
+            info = os.fstat(descriptor)
+            if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+                raise AdmissionError("journal ownership lock must be an unaliased regular file")
+            os.set_inheritable(descriptor, False)
+            stream = os.fdopen(descriptor, "r+b", buffering=0)
+            descriptor = -1
+            try:
+                stream.seek(0)
+                if os.name == "nt":
+                    import msvcrt
+
+                    msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+
+                    fcntl.flock(stream.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except OSError as error:
+                stream.close()
+                raise AdmissionError(
+                    "journal already owned or ownership lock unavailable"
+                ) from error
+            self._stream = stream
+        finally:
+            if descriptor != -1:
+                os.close(descriptor)
+
+    def close(self) -> None:
+        if self._stream is not None:
+            # Closing this noninherited descriptor releases the OS lock, even
+            # when construction failed before SQLite finished opening.
+            self._stream.close()
+            self._stream = None
 
 
 @dataclass(frozen=True)
@@ -62,19 +118,25 @@ class DurableJournal:
     def __init__(self, path: str | Path):
         self.path = Path(path).resolve()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.connection = sqlite3.connect(self.path, check_same_thread=False)
-        self.connection.execute("PRAGMA journal_mode=WAL")
-        self.connection.execute("PRAGMA synchronous=FULL")
-        self.connection.execute(
-            "CREATE TABLE IF NOT EXISTS broker (id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL, digest TEXT NOT NULL)"
-        )
-        self.connection.execute(
-            "CREATE TABLE IF NOT EXISTS receipts (intent_id TEXT PRIMARY KEY, payload TEXT NOT NULL)"
-        )
-        self.connection.execute(
-            "CREATE TABLE IF NOT EXISTS archives (tip TEXT PRIMARY KEY, payload TEXT NOT NULL, digest TEXT NOT NULL)"
-        )
-        self.connection.commit()
+        self._ownership = _JournalOwnership(self.path)
+        self.connection = None
+        try:
+            self.connection = sqlite3.connect(self.path, check_same_thread=False)
+            self.connection.execute("PRAGMA journal_mode=WAL")
+            self.connection.execute("PRAGMA synchronous=FULL")
+            self.connection.execute(
+                "CREATE TABLE IF NOT EXISTS broker (id INTEGER PRIMARY KEY CHECK(id=1), payload TEXT NOT NULL, digest TEXT NOT NULL)"
+            )
+            self.connection.execute(
+                "CREATE TABLE IF NOT EXISTS receipts (intent_id TEXT PRIMARY KEY, payload TEXT NOT NULL)"
+            )
+            self.connection.execute(
+                "CREATE TABLE IF NOT EXISTS archives (tip TEXT PRIMARY KEY, payload TEXT NOT NULL, digest TEXT NOT NULL)"
+            )
+            self.connection.commit()
+        except BaseException:
+            self.close()
+            raise
 
     def load(self) -> str | None:
         row = self.connection.execute("SELECT payload,digest FROM broker WHERE id=1").fetchone()
@@ -96,7 +158,12 @@ class DurableJournal:
                 )
 
     def close(self) -> None:
-        self.connection.close()
+        try:
+            if self.connection is not None:
+                self.connection.close()
+                self.connection = None
+        finally:
+            self._ownership.close()
 
     def archive(self, tip: str, payload: str) -> None:
         with self.connection:
@@ -136,27 +203,32 @@ class Runtime:
         self.store = DurableJournal(
             journal_path or self.workspace / ".reflexmesh" / "journal.sqlite3"
         )
-        journal = self.store.load()
-        if journal:
-            self.broker = Broker.from_journal(journal)
-            snapshot = self.snapshot()
-            if snapshot["workspace_id"] != self.workspace_id:
-                raise AdmissionError("journal belongs to a different workspace")
-            # Restart cannot grant capabilities absent from durable authority.
-            for cap in set(snapshot["state"]["capabilities"]) - set(capabilities):
-                self.broker.revoke(cap)
-        else:
-            self.broker = Broker(
-                wire(
-                    {
-                        "workspace_id": self.workspace_id,
-                        "capabilities": sorted(set(capabilities)),
-                        "trusted_sources": ["runtime", "verifier"],
-                    }
+        try:
+            journal = self.store.load()
+            if journal:
+                self.broker = Broker.from_journal(journal)
+                snapshot = self.snapshot()
+                if snapshot["workspace_id"] != self.workspace_id:
+                    raise AdmissionError("journal belongs to a different workspace")
+                # Restart cannot grant capabilities absent from durable authority.
+                for cap in set(snapshot["state"]["capabilities"]) - set(capabilities):
+                    self.broker.revoke(cap)
+            else:
+                self.broker = Broker(
+                    wire(
+                        {
+                            "workspace_id": self.workspace_id,
+                            "capabilities": sorted(set(capabilities)),
+                            "trusted_sources": ["runtime", "verifier"],
+                        }
+                    )
                 )
-            )
-        self._sequence = self.snapshot()["state"]["source_sequences"].get("runtime", 0)
-        self._persist()
+            self._sequence = self.snapshot()["state"]["source_sequences"].get("runtime", 0)
+            self._persist()
+        except BaseException:
+            self.store.close()
+            self._closed = True
+            raise
 
     def _persist(self, intent_id: str | None = None, receipt: dict | None = None) -> None:
         payload = self.broker.journal()
@@ -378,9 +450,11 @@ class Runtime:
             if self._cancel:
                 raise RuntimeError("cancel and join running effects before closing the runtime")
             if not self._closed:
-                self._persist()
-                self.store.close()
-                self._closed = True
+                try:
+                    self._persist()
+                finally:
+                    self.store.close()
+                    self._closed = True
 
     def __enter__(self) -> Self:
         return self

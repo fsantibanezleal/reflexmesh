@@ -27,3 +27,5 @@ artifacts/package-audit*/
 artifacts/ablations/
 artifacts/structural-transfer/
 artifacts/failed-attempts/
+artifacts/releases/
+artifacts/superseded/

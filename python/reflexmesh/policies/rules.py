@@ -44,7 +44,7 @@ def recommended_operation(observation: Observation) -> str:
     if "cas_write" in ops:
         return "rebase" if s.get("conflict") else "cas_write"
     if "spawn" in ops:
-        return "collect" if s.get("job_ready") else "spawn"
+        return "collect" if s.get("job_ready") else ("wait" if s.get("running") else "spawn")
     if "collect" in ops:
         return "collect" if s.get("job_ready") else "wait"
     if "reject" in ops:
@@ -188,7 +188,9 @@ class BehaviorTreePolicy:
                     "report",
                 ),
                 task("cas_write", [(state("conflict"), "rebase")], "cas_write"),
-                task("spawn", [(state("job_ready"), "collect")], "spawn"),
+                task(
+                    "spawn", [(state("job_ready"), "collect"), (state("running"), "wait")], "spawn"
+                ),
                 task("collect", [(state("job_ready"), "collect")], "wait"),
                 task("reject", [(state("confirmed"), "invoke")], "reject"),
                 task("reconcile", [], "reconcile"),

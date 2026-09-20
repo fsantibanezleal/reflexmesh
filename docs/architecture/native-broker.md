@@ -175,12 +175,34 @@ against an attacker who can rewrite the whole journal and its trusted anchor.
 `journal()` is an in-memory export; the host is responsible for durable storage,
 flush/fsync semantics, access control, retention and external anchoring.
 
+The packaged Python `Runtime` persists the broker in SQLite WAL mode with
+`synchronous=FULL`. Before opening SQLite it takes a nonblocking, lifetime OS
+lock on a persistent sidecar: a Windows byte-range lock or POSIX `flock`.
+A second cooperating runtime for the same canonical journal fails before it
+can recover, mutate, or dispatch from a competing state copy. Descriptors are
+noninheritable across exec; the operating system releases them after process
+termination. Normal close and constructor failures release ownership too.
+Hardlink aliases are rejected. The sidecar is never deleted on close because
+replacing a live lock inode would defeat exclusivity. This local-filesystem
+coordination assumes actors do not replace the journal or sidecar; it is not a
+distributed lock, network-filesystem guarantee, or privilege boundary.
+
 Persist an admission before issuing a non-idempotent external effect. Persist
 verified receipts after effects. If a crash occurs in that window, recovery
 must treat the effect as unknown and query actual state. `from_journal` performs
 exactly that conservative transition for recorded in-flight intents, clears
 transient queues, and never invokes an effector. If the host dispatches before
 persisting admission, a lost record can defeat local duplicate suppression.
+
+C20 exercises this window with an actual owned worker. It admits a fixed append,
+flushes and fsyncs one JSON-lines effect record, then exits with `os._exit(23)`
+without returning a receipt. Only after the worker has exited does the parent
+reopen that same journal. A repeated reopen or pure replay cannot invoke the
+writer; the unknown intent retains its write lease. Explicit reconciliation
+requires exactly one matching durable record and calls `Runtime.reconcile`.
+Missing, altered, malformed, oversized, or duplicated evidence remains unknown.
+This is a process-crash experiment; it does not simulate sudden power loss or
+establish exactly-once execution for arbitrary remote services.
 
 Checkpoint protocol: persist the current journal, then pass its exact tip to
 `checkpoint`, then persist the newly exported checkpoint journal. Keep the

@@ -129,11 +129,16 @@ def lineage(checkpoint_dir, specs, planner=None):
     packages = {}
     for name in (
         "numpy",
+        "scipy",
         "scikit-learn",
         "xgboost",
         "torch",
         "onnxruntime",
+        "onnx",
+        "joblib",
+        "httpx",
         "sb3-contrib",
+        "stable-baselines3",
         "gymnasium",
     ):
         try:
@@ -149,6 +154,9 @@ def lineage(checkpoint_dir, specs, planner=None):
             planner_info["registry"] = [
                 m for m in tags.get("models", []) if m["name"] == planner.model_id
             ]
+            planner_info["runtime_version"] = httpx.get(
+                "http://127.0.0.1:11434/api/version", timeout=10
+            ).json()
         except Exception as exc:
             raise ModelRequiredError("cannot verify configured local planner provenance") from exc
     from . import _native
@@ -187,6 +195,16 @@ def main(argv=None):
     parser.add_argument("--model", default="qwen3.5:4b")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
+    if args.stage in {"collect", "train", "ppo", "gates"}:
+        from .learning.provenance import TrainingCapture
+
+        with TrainingCapture(args):
+            _run(args)
+    else:
+        _run(args)
+
+
+def _run(args):
     data = args.artifacts / "data"
     checkpoints = args.artifacts / "checkpoints"
     checkpoints.mkdir(parents=True, exist_ok=True)

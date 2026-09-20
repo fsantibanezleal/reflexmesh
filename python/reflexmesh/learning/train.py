@@ -81,6 +81,16 @@ def train_classical(train: list[dict], calibration: list[dict], directory: str |
             "training_seconds": time.perf_counter() - start,
             "training_candidates": len(y),
             "calibration": calibration_report(scorer.probabilities(cx), cy),
+            "fit_configuration": {
+                key: value
+                for key, value in model.get_params().items()
+                if value is None
+                or isinstance(value, (str, int, bool))
+                or isinstance(value, float)
+                and np.isfinite(value)
+            },
+            "calibrator_configuration": calibrator.get_params(),
+            "device": "cpu",
         }
     # LinUCB receives only the actual action and observed one-step reward from each
     # exploratory log, never full-information labels for unexecuted actions.
@@ -97,6 +107,12 @@ def train_classical(train: list[dict], calibration: list[dict], directory: str |
         "updates": linucb.updates,
         "reward_target": "observed_one_step_reward",
         "sequential_interpretation": "myopic",
+        "fit_configuration": {
+            "dimension": 64,
+            "seed": 17,
+            "alpha": linucb.alpha,
+            "initial_ridge": 1.0,
+        },
     }
     (directory / "classical-training.json").write_text(
         json.dumps(results, indent=2), encoding="utf8"
@@ -212,6 +228,11 @@ def train_recurrent(
         "training_seconds": time.perf_counter() - start,
         "losses": losses,
         "temperature": policy.temperature,
+        "optimizer": "Adam",
+        "learning_rate": 0.003,
+        "sequence_batch_size": 32,
+        "gradient_norm_cap": 1.0,
+        "temperature_grid": "exp(linspace(-2,2,41))",
         **metadata,
     }
     (directory / "recurrent-training.json").write_text(
@@ -268,6 +289,10 @@ def train_transition(
         "epochs": epochs,
         "losses": losses,
         "device": device,
+        "seed": 31,
+        "optimizer": "Adam",
+        "learning_rate": 0.003,
+        "batch_size": 128,
         "validation_mse": float(errors.mean()),
         "validation_state_mse": dict(zip(STATE_KEYS, map(float, errors[:-2]), strict=True)),
         "validation_reward_mse": float(errors[-2]),
