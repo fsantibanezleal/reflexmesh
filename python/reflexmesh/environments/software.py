@@ -251,8 +251,34 @@ class SoftwareEnvironment:
 
             def execute(arguments, cancelled, operation=operation):
                 before = self._fingerprint("workspace")
+                reconciling = operation == "http_status" and getattr(
+                    self, "pending_remote_intent", None
+                )
                 try:
                     evidence = self._execute(operation)
+                    if operation == "http_post" and evidence.get("write_status") == "unknown":
+                        self.pending_remote_intent = f"{self.spec.episode_id}:{self.steps}"
+                        return EffectReceipt("effect_unknown", evidence)
+                    if reconciling:
+                        if not self.state.get("confirmed"):
+                            raise RuntimeError("remote_write_not_verified")
+                        self.runtime.reconcile(
+                            reconciling,
+                            EffectReceipt(
+                                "completed_verified",
+                                {
+                                    "verified_remote_status": json.loads(
+                                        (self.root / "remote-status.json").read_text()
+                                    ),
+                                    "verification": "actual HTTP GET after lost POST response",
+                                },
+                                ("workspace",),
+                            ),
+                        )
+                        self.pending_remote_intent = None
+                        return EffectReceipt(
+                            "completed_verified", evidence or {"operation": operation}
+                        )
                     return EffectReceipt(
                         "completed_verified", evidence or {"operation": operation}, ("workspace",)
                     )
@@ -268,7 +294,7 @@ class SoftwareEnvironment:
                     tool,
                     ("sandbox",),
                     validate,
-                    lambda args: {"workspace": "write"},
+                    lambda args, operation=operation: self._resources(operation),
                     execute,
                     self._fingerprint,
                     allow_write=True,
@@ -309,6 +335,12 @@ class SoftwareEnvironment:
         path.write_text(content, encoding="utf8")
 
     def _fingerprint(self, resource: str) -> str:
+        if resource == "remote-status":
+            # Only previously observed status, never hidden server state, binds
+            # this verifier resource. The GET itself supplies new evidence.
+            return hashlib.sha256(
+                str(self.state.get("observed_remote_status", "unobserved")).encode()
+            ).hexdigest()
         digest = hashlib.sha256()
         for path in sorted(self.root.rglob("*")):
             if path.is_file() and ".reflexmesh" not in path.relative_to(self.root).parts:
@@ -316,6 +348,11 @@ class SoftwareEnvironment:
                 digest.update(path.read_bytes())
         digest.update(json.dumps(self.state, sort_keys=True).encode())
         return digest.hexdigest()
+
+    def _resources(self, operation):
+        if operation == "http_status" and getattr(self, "pending_remote_intent", None):
+            return {"remote-status": "read"}
+        return {"workspace": "write"}
 
     def _child(self, code: str, *args: str):
         process = spawn(
@@ -433,7 +470,7 @@ class SoftwareEnvironment:
         if cached is not None:
             return cached
         candidates = []
-        bound_versions = None
+        bindings = {}
         for operation in self._operations():
             candidate = Candidate(
                 action_id=f"a-{operation}",
@@ -455,24 +492,25 @@ class SoftwareEnvironment:
                 },
             )
             if hasattr(self, "runtime"):
-                # All registered fixture actions declare the same workspace
-                # resource. Observe it once per causal step; execute rechecks
-                # tool authority, arguments and current resource fingerprint.
-                if bound_versions is None:
+                # Shared resources are observed once per causal step. The
+                # remote verifier has its own read admission while an unknown
+                # write retains the workspace lease until actual reconciliation.
+                resource_key = tuple(sorted(self._resources(operation).items()))
+                if resource_key not in bindings:
                     bound = self.runtime.candidate(
                         candidate.tool,
                         candidate.arguments,
                         action_id=candidate.action_id,
                         features=candidate.features,
                     )
-                    bound_versions = bound.resource_versions
+                    bindings[resource_key] = bound.resource_versions
                 candidate = Candidate(
                     candidate.action_id,
                     candidate.tool,
                     candidate.arguments,
                     candidate.effects,
                     candidate.required_capabilities,
-                    dict(bound_versions),
+                    dict(bindings[resource_key]),
                     candidate.features,
                 )
             candidates.append(candidate)
@@ -671,6 +709,7 @@ class SoftwareEnvironment:
         elif op == "http_status" and family == "C06":
             _, data = self._http("GET", "/status")
             s.update(confirmed=int(self.spec.episode_id in data["keys"]), write_unknown=0)
+            s["observed_remote_status"] = json.dumps(data, sort_keys=True)
             self._write("remote-status.json", json.dumps(data))
         elif op == "cancel" and family == "C07":
             for process in self.processes:

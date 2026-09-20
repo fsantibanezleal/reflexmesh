@@ -166,12 +166,14 @@ def create_app(
     planner: Any = None,
     static: str | Path | None = None,
     policy_factory=None,
+    workspace: str | Path | None = None,
+    process_templates: tuple = (),
     allowed_hosts: tuple[str, ...] = ("localhost", "127.0.0.1", "[::1]"),
 ):
     """Loopback host checks + bearer auth for every executable request.
 
-    The service executes the registered disposable benchmark workloads. General
-    workspace tools use the explicit Python Runtime/Controller SDK or CLI recipe.
+    Disposable benchmark workloads and an optional operator-configured workspace
+    use separate bounded workers. Browser requests cannot expand the tool scope.
     """
     from contextlib import asynccontextmanager
 
@@ -187,12 +189,17 @@ def create_app(
     if len(auth_token) < 24:
         raise ValueError("local service token must be at least 24 characters")
     manager = RunManager(checkpoints, planner, policy_factory=policy_factory)
+    from .workspace_service import WorkspaceManager
+
+    workspace_manager = WorkspaceManager(workspace, process_templates) if workspace else None
     artifact_root = Path(artifacts).resolve() if artifacts else None
 
     @asynccontextmanager
     async def lifespan(app):
         yield
         await __import__("asyncio").to_thread(manager.close)
+        if workspace_manager:
+            await __import__("asyncio").to_thread(workspace_manager.close)
 
     app = FastAPI(
         title="Neuraxis local control",
@@ -203,6 +210,7 @@ def create_app(
         openapi_url=None,
     )
     app.state.manager, app.state.local_token = manager, auth_token
+    app.state.workspace_manager = workspace_manager
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(allowed_hosts))
 
     @app.middleware("http")
@@ -250,6 +258,7 @@ def create_app(
             "local_auth_required": True,
             "planner_available": planner is not None,
             "checkpoint_available": Path(checkpoints).exists(),
+            "workspace_enabled": workspace_manager is not None,
         }
 
     async def body(request):
@@ -271,6 +280,60 @@ def create_app(
         if not isinstance(value, dict):
             raise HTTPException(422, "expected JSON object")
         return value
+
+    def configured_workspace():
+        if workspace_manager is None:
+            raise HTTPException(409, "start the local service with an explicit workspace")
+        return workspace_manager
+
+    @app.get("/api/workspace/config")
+    async def workspace_config():
+        return (
+            workspace_manager.config()
+            if workspace_manager
+            else {"enabled": False, "schema_version": 1}
+        )
+
+    @app.post("/api/workspace/preview")
+    async def workspace_preview(request: Request):
+        value = await body(request)
+        try:
+            return configured_workspace().preview(value)
+        except (ValueError, TypeError, KeyError, OSError):
+            raise HTTPException(422, "invalid recipe, path, file limit or capability") from None
+        except RuntimeError:
+            raise HTTPException(429, "preview capacity exhausted") from None
+
+    @app.post("/api/workspace/run")
+    async def workspace_run(request: Request):
+        value = await body(request)
+        if set(value) != {"preview_id"} or not isinstance(value["preview_id"], str):
+            raise HTTPException(422, "expected a preview_id")
+        try:
+            result = configured_workspace().launch(value["preview_id"])
+        except (ValueError, OSError):
+            raise HTTPException(
+                409, "preview expired, consumed or workspace changed; preview again"
+            ) from None
+        except RuntimeError:
+            raise HTTPException(429, "workspace worker busy") from None
+        return {"run_id": result.run_id, "status": result.status}
+
+    @app.get("/api/workspace/events")
+    async def workspace_events(run_id: str, after: int = 0):
+        if after < 0:
+            raise HTTPException(422, "after must be nonnegative")
+        try:
+            return configured_workspace().snapshot(run_id, after)
+        except KeyError:
+            raise HTTPException(404, "unknown workspace run") from None
+
+    @app.post("/api/workspace/cancel/{run_id}")
+    async def workspace_cancel(run_id: str):
+        try:
+            return configured_workspace().cancel(run_id)
+        except KeyError:
+            raise HTTPException(404, "unknown workspace run") from None
 
     @app.post("/api/run")
     async def run(request: Request):

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-from ..contracts import ModelRequiredError
+from ..contracts import Decision, ModelRequiredError
 from ..environments import CASES, VARIANTS, SoftwareEnvironment
 from ..policies import METHODS
 
@@ -26,6 +26,7 @@ def run_episode(
     started = time.perf_counter()
     policy.reset()
     events, decisions = [], []
+    policy_errors = []
     controller_ms, execution_ms, violations, delegations = 0.0, 0.0, 0, 0
     status = "failed"
     run_id = f"{policy.policy_id}-{spec.family}-{spec.variant}-{spec.seed}"
@@ -36,7 +37,26 @@ def run_episode(
                 break
             observation = environment.observe()
             begin = time.perf_counter()
-            decision = policy.predict(observation)
+            invalid_output = False
+            try:
+                decision = policy.predict(observation)
+            except (ValueError, KeyError) as error:
+                invalid_output = True
+                record = {
+                    "phase": "prediction",
+                    "type": type(error).__name__,
+                    "message": str(error)[:2000],
+                }
+                policy_errors.append(record)
+                # Usage is copied only if the real provider supplied it.
+                usage = getattr(getattr(policy, "planner", None), "last_usage", None)
+                decision = Decision(
+                    policy.policy_id,
+                    None,
+                    "stop",
+                    reason="invalid_policy_output",
+                    diagnostics={"policy_error": record, "provider_usage": usage},
+                )
             duration = (time.perf_counter() - begin) * 1000
             controller_ms += duration
             target = environment.expert_action()
@@ -113,6 +133,8 @@ def run_episode(
             )
             if on_step is not None:
                 on_step(event, decisions[-1])
+            if invalid_output:
+                break
         success = environment.verify()
         status = "succeeded" if success else (status if status == "cancelled" else "failed")
         native_snapshot = environment.runtime.snapshot()
@@ -120,8 +142,26 @@ def run_episode(
         actual_steps = environment.steps
     # Pending asynchronous work remains part of the episode cost, including stale
     # proposals. This synchronization is not included in hot-path decision time.
-    planner_work = policy.finish_episode() if hasattr(policy, "finish_episode") else {}
-    policy.reset()
+    try:
+        planner_work = policy.finish_episode() if hasattr(policy, "finish_episode") else {}
+    except (ValueError, KeyError) as error:
+        policy_errors.append(
+            {
+                "phase": "background_completion",
+                "type": type(error).__name__,
+                "message": str(error)[:2000],
+            }
+        )
+        planner_work = {
+            "invalid_background_proposal": True,
+            "provider_usage": getattr(getattr(policy, "planner", None), "last_usage", None),
+        }
+    try:
+        policy.reset()
+    except (ValueError, KeyError):
+        # Completion above recorded the bad proposal; reset clears state in a
+        # finally clause so the next independent episode remains evaluable.
+        pass
     wall_ms = (time.perf_counter() - started) * 1000
     return {
         "schema_version": 1,
@@ -138,6 +178,7 @@ def run_episode(
         "events": events,
         "decisions": decisions,
         "planner_work": planner_work,
+        "policy_errors": policy_errors,
         "resources": [
             {
                 "id": key,
@@ -153,6 +194,7 @@ def run_episode(
         "metrics": {
             "task_success": int(success),
             "steps": actual_steps,
+            "invalid_policy_output": int(bool(policy_errors)),
             "decision_calls": len(decisions),
             "deliberation_wait_ms": sum(
                 d["controller_ms"]

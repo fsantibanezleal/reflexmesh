@@ -276,12 +276,15 @@ class NativeGuard:
 
 
 def provenance(source: Path, local: LocalOllama) -> dict:
+    from .sources import validate_source
+
     marker = json.loads((source / "reflexmesh-source.json").read_text(encoding="utf-8"))
     freeze = subprocess.run(
         [sys.executable, "-m", "pip", "freeze"], check=True, capture_output=True, text=True
     ).stdout.splitlines()
     return {
         "source": marker,
+        "source_integrity": validate_source(source),
         "python": sys.version,
         "platform": platform.platform(),
         "dependencies": freeze,

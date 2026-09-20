@@ -148,10 +148,7 @@ class CandidateScorer:
 
     @classmethod
     def load(cls, directory: str | Path, policy_id: str, backend="python"):
-        import joblib
-
-        loaded = joblib.load(Path(directory) / f"{policy_id}.joblib")
-        result = cls(policy_id, loaded["model"], loaded["calibrator"])
+        result = cls(policy_id, None, None)
         if backend == "native":
             from .. import _native
 
@@ -168,7 +165,12 @@ class CandidateScorer:
             )
             if tuple(result.native_scorer.feature_names) != FEATURE_NAMES:
                 raise ValueError("native model feature schema mismatch")
-        elif backend != "python":
+        elif backend == "python":
+            import joblib
+
+            loaded = joblib.load(Path(directory) / f"{policy_id}.joblib")
+            result.model, result.calibrator = loaded["model"], loaded["calibrator"]
+        else:
             raise ValueError("unknown candidate scoring backend")
         return result
 

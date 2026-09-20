@@ -17,57 +17,64 @@ from .policies import METHODS
 
 def make_policy(method_id, checkpoint_dir, planner=None, **options):
     backend = options.pop("backend", "native")
-    from .policies.classical import CandidateScorer, LinUCBPolicy
-    from .policies.control import (
-        AsyncPlannerPolicy,
-        DeferralPolicy,
-        DirectPlannerPolicy,
-        LookaheadPolicy,
-        Metacontroller,
-    )
-    from .policies.recurrent import RecurrentPolicy
-    from .policies.rl import MaskedPPOPolicy
-    from .policies.rules import BehaviorTreePolicy, GuardedFSMPolicy
-
     directory = Path(checkpoint_dir)
-    if method_id == "M01":
-        return GuardedFSMPolicy()
-    if method_id == "M02":
-        return BehaviorTreePolicy()
-    if method_id in {"M03", "M04"}:
-        return CandidateScorer.load(directory, method_id, backend=backend)
+    if method_id in {"M01", "M02"}:
+        from .policies.rules import BehaviorTreePolicy, GuardedFSMPolicy
+
+        return GuardedFSMPolicy() if method_id == "M01" else BehaviorTreePolicy()
+    if method_id in {"M03", "M04", "M06"}:
+        from .policies.classical import CandidateScorer, LinUCBPolicy
+
+        return (
+            LinUCBPolicy.load(directory)
+            if method_id == "M06"
+            else CandidateScorer.load(directory, method_id, backend=backend)
+        )
+    if method_id in {"M09", "M10"}:
+        from .policies.planning import AsyncPlannerPolicy, DirectPlannerPolicy
+
+        return DirectPlannerPolicy(planner) if method_id == "M09" else AsyncPlannerPolicy(planner)
+    if method_id not in {"M05", "M07", "M08", "M11", "M12"}:
+        raise ValueError(f"unknown method {method_id}")
+    import torch
+
+    torch.set_num_threads(2)
     if method_id == "M05":
+        from .policies.recurrent import RecurrentPolicy
+
         return RecurrentPolicy.load(directory)
-    if method_id == "M06":
-        return LinUCBPolicy.load(directory)
     if method_id == "M07":
+        from .policies.rl import MaskedPPOPolicy
+
         return MaskedPPOPolicy.load(directory)
     if method_id == "M08":
-        return LookaheadPolicy.load(directory)
-    if method_id == "M09":
-        return DirectPlannerPolicy(planner)
-    if method_id == "M10":
-        return AsyncPlannerPolicy(planner)
-    if method_id in {"M11", "M12"}:
-        import joblib
+        from .policies.control import LookaheadPolicy
 
-        payload = joblib.load(directory / (method_id + ".gate.joblib"))
-        if method_id == "M11":
-            return DeferralPolicy(
-                CandidateScorer.load(directory, "M03", backend=backend),
-                payload["model"],
-                planner,
-                payload["threshold"],
-            )
-        return Metacontroller(
-            RecurrentPolicy.load(directory),
-            LookaheadPolicy.load(directory),
+        return LookaheadPolicy.load(directory)
+    import joblib
+
+    from .policies.control import DeferralPolicy, LookaheadPolicy, Metacontroller
+
+    payload = joblib.load(directory / (method_id + ".gate.joblib"))
+    if method_id == "M11":
+        from .policies.classical import CandidateScorer
+
+        return DeferralPolicy(
+            CandidateScorer.load(directory, "M03", backend=backend),
             payload["model"],
             planner,
             payload["threshold"],
-            **options,
         )
-    raise ValueError(f"unknown method {method_id}")
+    from .policies.recurrent import RecurrentPolicy
+
+    return Metacontroller(
+        RecurrentPolicy.load(directory),
+        LookaheadPolicy.load(directory),
+        payload["model"],
+        planner,
+        payload["threshold"],
+        **options,
+    )
 
 
 def load_policies(checkpoint_dir, planner=None, methods=None):
@@ -150,6 +157,7 @@ def lineage(checkpoint_dir, specs, planner=None):
         "platform": platform.platform(),
         "planner": planner_info,
         "inference_device": "CPU for fitted policies; planner device reported by its runtime",
+        "torch_inference_threads": 2,
     }
 
 

@@ -346,6 +346,8 @@ class MCPClient:
                 headers,
             )
             active_socket[0] = connection.sock
+            if cancelled.is_set() or time.monotonic() >= deadline:
+                raise MCPError("MCP request cancelled during connection; effect may be unknown")
             response = connection.getresponse()
             if 300 <= response.status < 400:
                 raise MCPError("MCP redirects are not authorized by endpoint scope")
@@ -370,6 +372,8 @@ class MCPClient:
                         raise MCPError("MCP request cancelled; remote effect may be unknown")
                     if not line:
                         raise MCPError("MCP stream ended before final response")
+                    if len(line) == 65536 and not line.endswith((b"\n", b"\r")):
+                        raise MCPError("MCP stream line bound exceeded")
                     line = line.decode("utf-8").rstrip("\r\n")
                     if line == "" and data:
                         message = json.loads("\n".join(data))

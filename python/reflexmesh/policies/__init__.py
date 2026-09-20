@@ -1,13 +1,28 @@
-from .classical import CandidateScorer, LinUCBPolicy
-from .control import (
-    AsyncPlannerPolicy,
-    DeferralPolicy,
-    DirectPlannerPolicy,
-    LookaheadPolicy,
-    Metacontroller,
-)
-from .recurrent import RecurrentPolicy
-from .rules import BehaviorTreePolicy, GuardedFSMPolicy
+"""Lazy public policy registry; base rule/native serving needs no training stack."""
+
+from importlib import import_module
+
+_MODULES = {
+    "CandidateScorer": "classical",
+    "LinUCBPolicy": "classical",
+    "AsyncPlannerPolicy": "planning",
+    "DirectPlannerPolicy": "planning",
+    "DeferralPolicy": "control",
+    "LookaheadPolicy": "control",
+    "Metacontroller": "control",
+    "RecurrentPolicy": "recurrent",
+    "BehaviorTreePolicy": "rules",
+    "GuardedFSMPolicy": "rules",
+}
+
+
+def __getattr__(name):
+    if name not in _MODULES:
+        raise AttributeError(name)
+    value = getattr(import_module("." + _MODULES[name], __name__), name)
+    globals()[name] = value
+    return value
+
 
 METHODS = {
     "M01": "Guarded finite-state policy",

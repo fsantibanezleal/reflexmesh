@@ -111,6 +111,13 @@ def summarize(base: Path, selected: list[str], output: Path) -> dict:
                     if e["status"] != "evaluated"
                 ],
                 "manifest_complete": len(manifest) == len(entries),
+                "provenance_sha256": file_hash(path.parent / "provenance.json"),
+                "source": raw["provenance"]["source"],
+                "model": raw["provenance"]["model"],
+                "python": raw["provenance"]["python"],
+                "platform": raw["provenance"]["platform"],
+                "seed": raw["provenance"]["seed"],
+                "model_options": raw["provenance"]["model_options"],
             }
         )
         if not is_selected:
@@ -157,7 +164,7 @@ def summarize(base: Path, selected: list[str], output: Path) -> dict:
                     "evaluator_replay_native_calls": len(evaluation),
                     "acting_admission_ms": _percentiles(admission),
                     "model_calls_agent_and_user": len(entry["model_calls"]),
-                    "provenance": raw["provenance"],
+                    "policy": raw["provenance"]["policy"],
                     "phase_evidence": reconstruction,
                 }
             )

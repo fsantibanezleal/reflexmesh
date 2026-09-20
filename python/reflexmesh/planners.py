@@ -335,12 +335,14 @@ class AsyncDeliberator:
         value = {
             "goal_id": observation.goal_id,
             "revision": observation.revision,
+            "state": observation.state,
             "capabilities": sorted(observation.capabilities),
             "candidates": [
                 {
                     "action_id": c.action_id,
                     "tool": c.tool,
                     "arguments": c.arguments,
+                    "effects": c.effects,
                     "resources": c.resource_versions,
                     "capabilities": c.required_capabilities,
                     "allowed": c.allowed,

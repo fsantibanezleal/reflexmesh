@@ -46,7 +46,12 @@ def test_ambiguous_post_only_reconciles_one_effect():
     with SoftwareEnvironment(CaseSpec("C06", "nominal", 41000)) as env:
         env.step("a-http_post")
         assert env.service.writes == 1 and env.state["write_unknown"]
+        original = f"{env.spec.episode_id}:0"
+        assert env.runtime.snapshot()["state"]["intents"][original]["status"] == "effect_unknown"
         env.step("a-http_post")
         assert env.service.writes == 1
         env.step("a-http_status")
         assert env.verify() and env.service.writes == 1
+        assert (
+            env.runtime.snapshot()["state"]["intents"][original]["status"] == "completed_verified"
+        )

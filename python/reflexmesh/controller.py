@@ -207,7 +207,7 @@ class Controller:
             if not task.done():
                 return
             del self.inferences[goal.goal_id]
-            if submitted.revision != observation.revision:
+            if AsyncDeliberator._binding(submitted) != AsyncDeliberator._binding(observation):
                 await self._emit({"kind": "stale_policy_result", "goal_id": goal.goal_id})
                 return
             decision = task.result()

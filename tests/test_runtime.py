@@ -185,9 +185,10 @@ def test_checkpoint_preserves_audit_and_recovers(tmp_path):
 def test_real_process_crash_after_effect_requires_reconciliation(tmp_path):
     from pathlib import Path
 
+    import reflexmesh
     from reflexmesh.processes import spawn
 
-    source = str(Path(__file__).resolve().parents[1] / "python")
+    source = str(Path(reflexmesh.__file__).resolve().parent.parent)
     code = """
 import os,sys
 from pathlib import Path
@@ -203,11 +204,15 @@ runtime.register(ToolSpec('crash-test',('crash-test',),lambda a:a,
     lambda r:(root/'committed.txt').read_text() if (root/'committed.txt').exists() else 'absent',True))
 runtime.execute_candidate(runtime.candidate('crash-test',{}),intent_id='crashed-intent')
 """
-    child = spawn([worker_python(), "-c", code, source, str(tmp_path)], cwd=tmp_path)
-    try:
-        assert child.wait(timeout=10) == 23
-    finally:
-        child.close()
+    with (tmp_path / "crash-stderr.txt").open("wb") as stderr:
+        child = spawn(
+            [worker_python(), "-c", code, source, str(tmp_path)], cwd=tmp_path, stderr=stderr
+        )
+        try:
+            status = child.wait(timeout=10)
+        finally:
+            child.close()
+    assert status == 23, (tmp_path / "crash-stderr.txt").read_text(errors="replace")
     assert (tmp_path / "committed.txt").read_text() == "one effect"
     with Runtime(tmp_path, ("crash-test",)) as recovered:
         assert (

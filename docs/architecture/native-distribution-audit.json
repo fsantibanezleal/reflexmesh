@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "artifacts": [
+    {
+      "name": "reflexmesh-0.1.0.tar.gz",
+      "sha256": "1ef99179ea0f359646e4e1b83edac723b1fda8f3ffca5da2b8424ee43cac94f4",
+      "bytes": 135413
+    },
+    {
+      "name": "reflexmesh-0.1.0-cp312-cp312-win_amd64.whl",
+      "sha256": "f78d4c4ed3f68f22b7ed028464a011a988c0ee99f385139b0a6647abd1363e3d",
+      "bytes": 563425
+    }
+  ],
+  "wheel_metadata": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: false\nTag: cp312-cp312-win_amd64\n\n",
+  "native_extension": "reflexmesh/_native.cp312-win_amd64.pyd",
+  "native_sha256": "acc5234a9b261b7dfe6a72474c99ecd1549175c924993690ee679193027336b9",
+  "sdist_native_sources_and_notices_present": true,
+  "source_distribution_matches_frozen_scientific_files": [
+    "Cargo.lock",
+    "Cargo.toml",
+    "python/reflexmesh/contracts.py",
+    "python/reflexmesh/effectors.py",
+    "python/reflexmesh/environments/__init__.py",
+    "python/reflexmesh/environments/gym.py",
+    "python/reflexmesh/environments/software.py",
+    "python/reflexmesh/environments/structural.py",
+    "python/reflexmesh/evaluation/__init__.py",
+    "python/reflexmesh/evaluation/runner.py",
+    "python/reflexmesh/features.py",
+    "python/reflexmesh/learning/__init__.py",
+    "python/reflexmesh/learning/dataset.py",
+    "python/reflexmesh/learning/routing.py",
+    "python/reflexmesh/learning/train.py",
+    "python/reflexmesh/pipeline.py",
+    "python/reflexmesh/planners.py",
+    "python/reflexmesh/policies/__init__.py",
+    "python/reflexmesh/policies/classical.py",
+    "python/reflexmesh/policies/control.py",
+    "python/reflexmesh/policies/planning.py",
+    "python/reflexmesh/policies/recurrent.py",
+    "python/reflexmesh/policies/rl.py",
+    "python/reflexmesh/policies/rules.py",
+    "python/reflexmesh/processes.py",
+    "python/reflexmesh/runtime.py",
+    "rust/contracts.rs",
+    "rust/core.rs",
+    "rust/lib.rs",
+    "rust/policy.rs",
+    "rust/tests.rs"
+  ],
+  "raw_benchmarks_or_artifacts_bundled": false,
+  "twine_check": "passed",
+  "installed_eval_suite": {
+    "passed": 255,
+    "failed": 0,
+    "warnings": 2
+  },
+  "publication": "not performed by audit"
+}

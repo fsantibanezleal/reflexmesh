@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "package_version": "0.1.0",
+  "installed_from_site_packages": true,
+  "engine": "rust-pyo3",
+  "extension": "_native.cp312-win_amd64.pyd",
+  "extension_sha256": "acc5234a9b261b7dfe6a72474c99ecd1549175c924993690ee679193027336b9",
+  "package_python_manifest_sha256": "11157eaddd691aebad1af8097258639cbe1ba303a1983e53e42d4f4cb16f1332",
+  "optional_frameworks_available": {
+    "torch": true,
+    "sklearn": true,
+    "xgboost": true,
+    "gymnasium": true,
+    "sb3_contrib": true,
+    "onnxruntime": true
+  },
+  "optional_frameworks_imported": [],
+  "base_only_required": false,
+  "file_effect_and_replay": "passed",
+  "policies": {
+    "M01": {
+      "case": "C01/nominal/82000",
+      "actual_outcome_verified": true,
+      "decisions": [
+        {
+          "candidate_id": "a-move",
+          "diagnostics": {
+            "operation": "move",
+            "learned": false
+          }
+        }
+      ]
+    },
+    "M02": {
+      "case": "C01/nominal/82000",
+      "actual_outcome_verified": true,
+      "decisions": [
+        {
+          "candidate_id": "a-move",
+          "diagnostics": {
+            "tree_status": "running",
+            "node_trace": [
+              {
+                "node": "refresh-stale-condition",
+                "status": "failure"
+              },
+              {
+                "node": "ack-duplicate-condition",
+                "status": "failure"
+              },
+              {
+                "node": "resolve-dependency-condition",
+                "status": "failure"
+              },
+              {
+                "node": "cancel-running-condition",
+                "status": "failure"
+              },
+              {
+                "node": "validate-available",
+                "status": "failure"
+              },
+              {
+                "node": "run_test-available",
+                "status": "failure"
+              },
+              {
+                "node": "http_post-available",
+                "status": "failure"
+              },
+              {
+                "node": "http_get-available",
+                "status": "failure"
+              },
+              {
+                "node": "restart-available",
+                "status": "failure"
+              },
+              {
+                "node": "cleanup-available",
+                "status": "failure"
+              },
+              {
+                "node": "extract-available",
+                "status": "failure"
+              },
+              {
+                "node": "cas_write-available",
+                "status": "failure"
+              },
+              {
+                "node": "spawn-available",
+                "status": "failure"
+              },
+              {
+                "node": "collect-available",
+                "status": "failure"
+              },
+              {
+                "node": "reject-available",
+                "status": "failure"
+              },
+              {
+                "node": "reconcile-available",
+                "status": "failure"
+              },
+              {
+                "node": "reorder-available",
+                "status": "failure"
+              },
+              {
+                "node": "invoke-available",
+                "status": "failure"
+              },
+              {
+                "node": "untrusted-content",
+                "status": "failure"
+              },
+              {
+                "node": "index-changed-content-condition",
+                "status": "failure"
+              },
+              {
+                "node": "move-available",
+                "status": "success"
+              },
+              {
+                "node": "default-move",
+                "status": "running"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "M03": {
+      "case": "C01/nominal/82000",
+      "actual_outcome_verified": true,
+      "decisions": [
+        {
+          "candidate_id": "a-move",
+          "diagnostics": {
+            "probability_target": "verified_demonstration_action",
+            "safety_bound": false,
+            "inference_backend": "native_cached"
+          }
+        }
+      ]
+    },
+    "M04": {
+      "case": "C01/nominal/82000",
+      "actual_outcome_verified": true,
+      "decisions": [
+        {
+          "candidate_id": "a-move",
+          "diagnostics": {
+            "probability_target": "verified_demonstration_action",
+            "safety_bound": false,
+            "inference_backend": "native_cached"
+          }
+        }
+      ]
+    }
+  },
+  "limitations": "Installation smoke and one actual routing task; not the release outcome matrix"
+}
