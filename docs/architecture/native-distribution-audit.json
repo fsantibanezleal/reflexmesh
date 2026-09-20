@@ -3,18 +3,28 @@
   "artifacts": [
     {
       "name": "reflexmesh-0.1.0.tar.gz",
-      "sha256": "1ef99179ea0f359646e4e1b83edac723b1fda8f3ffca5da2b8424ee43cac94f4",
-      "bytes": 135413
+      "sha256": "3d375b820901342abe19be54ce8e66ce2115fa8df99097a14f140392d15db592",
+      "bytes": 138664
     },
     {
       "name": "reflexmesh-0.1.0-cp312-cp312-win_amd64.whl",
-      "sha256": "f78d4c4ed3f68f22b7ed028464a011a988c0ee99f385139b0a6647abd1363e3d",
-      "bytes": 563425
+      "sha256": "74fc1166ea311410c9c359af69bbfe137994f914b42bf141fcb111f77e3f61bb",
+      "bytes": 566496
     }
   ],
   "wheel_metadata": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: false\nTag: cp312-cp312-win_amd64\n\n",
   "native_extension": "reflexmesh/_native.cp312-win_amd64.pyd",
-  "native_sha256": "acc5234a9b261b7dfe6a72474c99ecd1549175c924993690ee679193027336b9",
+  "native_sha256": "7900b3412fc6816bb93902d5643cb0929cfa8a6f00c2067d57eb20b820b09b8a",
+  "embedded_native_source_sha256": {
+    "Cargo.lock": "c89ad9b6caa248761e85f839a9bde73e468627902e96442d36a8bbaad5e88f28",
+    "Cargo.toml": "f4933884f721b09aee153d70872fb44488af4f3986a5a6e802fc51481c5641ab",
+    "rust/contracts.rs": "80faa2ad867c4bdda2fca98d3c068c577217fa29465235187063c1f22b423dc9",
+    "rust/core.rs": "9ebf227d2e152c59dd0fdf613f954051ef0d5b60c11328b042fa41fa48b22fbf",
+    "rust/lib.rs": "f84d221f521c35905377dcc4522111206ab27d564059845983a28f791acc7cfe",
+    "rust/policy.rs": "964cd3c64e97ea3fa9719dde0aa495136943d33b85d74eb2f95af0aea724c67b",
+    "rust/tests.rs": "e5fe531edeb55fb0cb662f91645f5dbab07b87602916b3d12f931896366e4820"
+  },
+  "outside_working_directory_lineage_verified": true,
   "sdist_native_sources_and_notices_present": true,
   "source_distribution_matches_frozen_scientific_files": [
     "Cargo.lock",
@@ -52,7 +62,7 @@
   "raw_benchmarks_or_artifacts_bundled": false,
   "twine_check": "passed",
   "installed_eval_suite": {
-    "passed": 255,
+    "passed": 258,
     "failed": 0,
     "warnings": 2
   },

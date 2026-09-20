@@ -222,7 +222,8 @@ def train_gates(checkpoints, data, planner, progress=None):
             "positive_calibration_states": int(cy.sum()),
             "threshold": threshold,
             "calibration_net_incremental_utility": max(values),
-            "calibration": calibration_report(probability, sy),
+            "calibration": calibration_report(probability, sy)
+            | {"target": "positive_incremental_utility"},
             "planner_model": planner.model_id,
             "target": "positive executed one-decision incremental utility including measured planner cost",
             "scope": "resettable owned environments; shared teacher continuation; not whole-policy causal effect",

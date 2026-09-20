@@ -5,6 +5,12 @@ distributions include `Cargo.toml`, `Cargo.lock`, the Rust modules, Python sourc
 license and notices. Building from that source distribution creates the actual
 native extension; there is no Python broker fallback.
 
+The build also embeds `native-source.json` with SHA-256 hashes of Cargo and
+Rust inputs. Installed evaluation always prefers this build manifest over the
+current working directory, which may belong to an unrelated checkout. Editable
+development can derive the same map from its source tree. Missing native source
+provenance fails evaluation admission instead of producing an empty lineage.
+
 Although Cargo enables PyO3's Python 3.11 limited API, the current setuptools
 configuration emits **per-interpreter wheels** such as
 `cp312-cp312-win_amd64`, not a universally installable `abi3` wheel. Use the wheel

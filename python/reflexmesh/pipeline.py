@@ -8,6 +8,7 @@ import importlib.metadata
 import json
 import platform
 from dataclasses import asdict
+from importlib import resources
 from pathlib import Path
 
 from .contracts import ModelRequiredError
@@ -104,10 +105,22 @@ def lineage(checkpoint_dir, specs, planner=None):
     files = {str(p.relative_to(source)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     repository = Path.cwd() if (Path.cwd() / "Cargo.toml").exists() else source.parent.parent
     native = {
-        str(p.relative_to(repository)): hashlib.sha256(p.read_bytes()).hexdigest()
+        p.relative_to(repository).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
         for p in (list((repository / "rust").rglob("*.rs")) + list(repository.glob("Cargo.*")))
         if p.is_file()
     }
+    packaged_native = resources.files("reflexmesh").joinpath("native-source.json")
+    if packaged_native.is_file():
+        manifest = json.loads(packaged_native.read_text(encoding="utf8"))
+        native = manifest.get("source_sha256", manifest)
+    if (
+        not isinstance(native, dict)
+        or "Cargo.toml" not in native
+        or not any(key.endswith(".rs") for key in native)
+    ):
+        raise ModelRequiredError(
+            "native source provenance unavailable; rebuild wheel with native-source.json"
+        )
     models = {
         p.name: hashlib.sha256(p.read_bytes()).hexdigest()
         for p in directory.glob("*")

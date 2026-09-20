@@ -17,15 +17,15 @@
   },
   "package_python_manifest_sha256": "185092e279c0e53048985d6be80296a8201c0afb41ae26c62d547c59abd595ba",
   "optional_frameworks_available": {
-    "torch": true,
-    "sklearn": true,
-    "xgboost": true,
-    "gymnasium": true,
-    "sb3_contrib": true,
-    "onnxruntime": true
+    "torch": false,
+    "sklearn": false,
+    "xgboost": false,
+    "gymnasium": false,
+    "sb3_contrib": false,
+    "onnxruntime": false
   },
   "optional_frameworks_imported": [],
-  "base_only_required": false,
+  "base_only_required": true,
   "file_effect_and_replay": "passed",
   "policies": {
     "M01": {

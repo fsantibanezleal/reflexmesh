@@ -22,6 +22,17 @@ def audit(checkpoints: Path | None = None, require_base_only: bool = False) -> d
     package = Path(reflexmesh.__file__).resolve().parent
     if "site-packages" not in package.parts:
         raise AssertionError("audit must import an installed wheel outside the source tree")
+    source_manifest = json.loads((package / "native-source.json").read_text(encoding="utf-8"))
+    native_sources = source_manifest["source_sha256"]
+    if source_manifest["schema_version"] != 1 or not {
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust/lib.rs",
+        "rust/core.rs",
+        "rust/policy.rs",
+        "rust/contracts.rs",
+    }.issubset(native_sources):
+        raise AssertionError("installed wheel native source lineage is incomplete")
     frameworks = ("torch", "sklearn", "xgboost", "gymnasium", "sb3_contrib", "onnxruntime")
     available = {name: importlib.util.find_spec(name) is not None for name in frameworks}
     if require_base_only and any(available.values()):
@@ -80,6 +91,7 @@ def audit(checkpoints: Path | None = None, require_base_only: bool = False) -> d
         "engine": _native.__engine__,
         "extension": extension.name,
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
+        "native_source_sha256": native_sources,
         "package_python_manifest_sha256": hashlib.sha256(json.dumps(files).encode()).hexdigest(),
         "optional_frameworks_available": available,
         "optional_frameworks_imported": imported_frameworks,

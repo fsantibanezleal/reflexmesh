@@ -1,0 +1,78 @@
+{
+  "extension": "_native.dll",
+  "native_engine": "rust-pyo3",
+  "note": "Numerical export parity, not outcome generalization or safety calibration evidence",
+  "results": {
+    "M03": {
+      "batch_size": 32,
+      "cached_constructor_ms": 0.111,
+      "cached_max_abs_probability_error": 8.770761894538737e-15,
+      "call_latency_ms": {
+        "50": 0.8679999999999999,
+        "95": 1.276825,
+        "99": 1.3042449999999999
+      },
+      "feature_dimension": 934,
+      "max_abs_probability_error": 7.882583474838611e-15,
+      "mean_abs_probability_error": 3.589048933900069e-17,
+      "model_sha256": "6484fce0702bcd44e0feadcdb7fcbcec048583be6e67b5c84ee16b03dfed930f",
+      "passed": true,
+      "split_thresholds": 81,
+      "timing_scope": "JSON model parse + feature parse + Rust batch scoring + return decode; excludes Python feature construction",
+      "tolerance": 1e-05,
+      "vectors": 499,
+      "warmed_candidate_count": 7,
+      "warmed_latency_ms": {
+        "native_cached": {
+          "50": 0.013,
+          "95": 0.020914999999999986,
+          "99": 0.033630999999999966
+        },
+        "python_reference": {
+          "50": 0.1575,
+          "95": 0.32164999999999994,
+          "99": 0.494034
+        }
+      },
+      "warmed_repetitions": 500,
+      "warmed_timing_scope": "Native: packed feature serialization + cached Rust scoring + return list; Python: fitted model predict + Platt; both exclude shared feature construction and effect execution"
+    },
+    "M04": {
+      "batch_size": 32,
+      "cached_constructor_ms": 1.4278,
+      "cached_max_abs_probability_error": 1.8881769803247295e-07,
+      "call_latency_ms": {
+        "50": 2.31455,
+        "95": 4.543325,
+        "99": 4.683065
+      },
+      "feature_dimension": 934,
+      "max_abs_probability_error": 1.8881769803247295e-07,
+      "mean_abs_probability_error": 1.389113397056288e-08,
+      "model_sha256": "9833992ebe8f7979f9415cf13d34389d4bf1858b6f8abe4658a34dcdc416a9f8",
+      "passed": true,
+      "split_thresholds": 81,
+      "timing_scope": "JSON model parse + feature parse + Rust batch scoring + return decode; excludes Python feature construction",
+      "tolerance": 1e-05,
+      "vectors": 499,
+      "warmed_candidate_count": 7,
+      "warmed_latency_ms": {
+        "native_cached": {
+          "50": 0.0285,
+          "95": 0.039605,
+          "99": 0.053660999999999945
+        },
+        "python_reference": {
+          "50": 0.45675,
+          "95": 0.6641249999999999,
+          "99": 0.8227099999999999
+        }
+      },
+      "warmed_repetitions": 500,
+      "warmed_timing_scope": "Native: packed feature serialization + cached Rust scoring + return list; Python: fitted model predict + Platt; both exclude shared feature construction and effect execution"
+    }
+  },
+  "schema_version": 1,
+  "seed": 44128,
+  "extension_sha256": "1032578b457ec8f294e5fde09f052b1160d4dd0eb61b195500dc6ae36cbdfe6c"
+}

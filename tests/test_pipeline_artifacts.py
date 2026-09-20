@@ -87,3 +87,13 @@ def test_invalid_unused_background_proposal_preserves_true_task_outcome_and_rese
             assert result["planner_work"]["provider_usage"] is None
     finally:
         policy.close()
+
+
+def test_lineage_requires_real_native_sources_outside_repository_cwd(tmp_path, monkeypatch):
+    from reflexmesh.pipeline import lineage
+
+    monkeypatch.chdir(tmp_path)
+    record = lineage(tmp_path, [CaseSpec("C01", "nominal", 82000)])
+    assert "Cargo.toml" in record["native_source_sha256"]
+    assert any(name.endswith(".rs") for name in record["native_source_sha256"])
+    assert len(record["native_binary"]["sha256"]) == 64

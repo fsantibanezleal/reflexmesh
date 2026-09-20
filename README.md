@@ -1,5 +1,9 @@
 # reflexmesh
 
+For actual user files, run `reflexmesh workflow recipe.json --workspace /absolute/directory`, or start the local workbench with `--workspace`. The [workspace workflow contract](docs/workspace-workflows.md) covers registered processes, dependency verification, previews, cancellation and native receipts.
+
+Released trained checkpoints are separate downloadable assets: `reflexmesh fetch-models --destination models/checkpoints --version v0.01.000` verifies the archive and every model digest before replacing files. Use only project release artifacts: some trained framework formats require trusted model files. The scientific pipeline remains available to rebuild the checkpoints from owned data.
+
 An event-driven software controller with a Rust authority core, Python tool adapters, learned policies and asynchronous language-model coordination. The library is the engine behind Neuraxis.
 
 The controller maintains exact capabilities and resource versions separately from learned recurrent state. A policy proposes a bounded action or requests deliberation. The executor revalidates authority and state before dispatch, records effects durably, and preserves unknown outcomes for reconciliation. Model confidence never grants permission.
