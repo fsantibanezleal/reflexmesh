@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77", "setuptools-rust>=1.11", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reflexmesh"
+version = "0.1.0"
+description = "Typed event-driven software control and learned metacontrol"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [{name = "Felipe Santibanez-Leal"}]
+dependencies = ["numpy>=2.0,<3", "pydantic>=2.10,<3"]
+
+[project.optional-dependencies]
+train = ["torch>=2.6", "scikit-learn>=1.6", "xgboost>=3.0", "gymnasium>=1.0", "sb3-contrib>=2.6", "onnx>=1.17", "onnxruntime>=1.20"]
+server = ["fastapi>=0.135,<1", "uvicorn>=0.34", "httpx>=0.28"]
+dev = ["pytest>=8", "pytest-asyncio>=0.25", "ruff>=0.11", "build>=1.2", "twine>=6"]
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
