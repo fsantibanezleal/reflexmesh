@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import time
 from dataclasses import asdict
@@ -14,6 +15,7 @@ from sklearn.linear_model import LogisticRegression, Ridge
 
 from ..contracts import Decision
 from ..environments import CaseSpec, SoftwareEnvironment, case_matrix
+from ..features import feature_matrix
 from ..policies.classical import CandidateScorer
 from ..policies.control import LookaheadPolicy, MetaFastPolicy, deferral_features
 from ..policies.recurrent import RecurrentPolicy
@@ -52,7 +54,30 @@ class CalibratedBenefit:
         return self.regressor.predict(x)
 
 
-def _branch(spec, prefix, action):
+def pair_signature(observation):
+    """Bind every candidate feature row and causal history before any outcome.
+
+    This verifies observed model-input equivalence, not cloned hidden process or
+    operating-system state. Transient paths/ports and future timing are not
+    asserted equivalent across independently reset workspaces.
+    """
+    rows = feature_matrix(observation)
+    payload = {
+        "goal": observation.state.get("goal"),
+        "history": observation.history,
+        "candidates": sorted(
+            [candidate.action_id, candidate.tool, candidate.arguments, row.tolist()]
+            for candidate, row in zip(observation.admissible, rows, strict=True)
+        ),
+    }
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+def eligible_records(records, method):
+    return [record for record in records if record["fast"][method]["pair_eligible"]]
+
+
+def _branch(spec, prefix, action, expected_signature):
     """Execute the specified branch then bounded shared continuation in a fresh environment."""
     teacher = GuardedFSMPolicy()
     with SoftwareEnvironment(spec) as env:
@@ -60,6 +85,8 @@ def _branch(spec, prefix, action):
             if env.terminal:
                 raise ValueError("prefix unexpectedly terminal")
             env.step(item)
+        actual_signature = pair_signature(env.observe())
+        matched = actual_signature == expected_signature
         _, outcome = env.step(action if action is not None else Decision("paired", None, "stop"))
         immediate = outcome.reward
         while not env.terminal:
@@ -71,6 +98,12 @@ def _branch(spec, prefix, action):
             "steps": env.steps,
             "utility": float(success) + immediate - 0.005 * env.steps,
             "native_receipts": len(env.runtime.snapshot()["state"]["intents"]),
+            "start_feature_signature": actual_signature,
+            "expected_feature_signature": expected_signature,
+            "start_features_match": matched,
+            "pairing_exclusion_reason": None
+            if matched
+            else "reset scheduling or observation differs before selected action",
         }
 
 
@@ -102,9 +135,10 @@ def paired_experiments(specs, fast_policies, planner, path, progress=None):
                     began = time.perf_counter()
                     slow = planner.plan(observation)
                     elapsed = time.perf_counter() - began
-                    slow_branch = _branch(spec, prefix, slow.candidate_id)
+                    expected_signature = pair_signature(observation)
+                    slow_branch = _branch(spec, prefix, slow.candidate_id, expected_signature)
                     branches = {
-                        key: _branch(spec, prefix, decision.candidate_id)
+                        key: _branch(spec, prefix, decision.candidate_id, expected_signature)
                         for key, decision in fast.items()
                     }
                     record = {
@@ -117,12 +151,21 @@ def paired_experiments(specs, fast_policies, planner, path, progress=None):
                         "planner_seconds": elapsed,
                         "planner_model": planner.model_id,
                         "slow_branch": slow_branch,
+                        "pairing_scope": "same complete candidate feature matrix and causal history; not cloned hidden OS state",
                         "fast": {
                             key: {
                                 "decision": decision.to_dict(),
                                 "features": deferral_features(observation, decision).tolist(),
                                 "branch": branches[key],
+                                "pair_eligible": slow_branch["start_features_match"]
+                                and branches[key]["start_features_match"],
                                 "incremental_utility": slow_branch["utility"]
+                                - 0.005 * elapsed
+                                - branches[key]["utility"]
+                                if slow_branch["start_features_match"]
+                                and branches[key]["start_features_match"]
+                                else None,
+                                "observed_utility_difference": slow_branch["utility"]
                                 - 0.005 * elapsed
                                 - branches[key]["utility"],
                             }
@@ -157,15 +200,20 @@ def train_gates(checkpoints, data, planner, progress=None):
     select_specs = [
         CaseSpec(s.family, s.variant, 70000, "validation") for s in case_matrix("validation", 1)
     ]
-    fit = paired_experiments(fit_specs, fast, planner, data / "router-fit.jsonl", progress)
-    calibration = paired_experiments(
+    fit_attempts = paired_experiments(fit_specs, fast, planner, data / "router-fit.jsonl", progress)
+    calibration_attempts = paired_experiments(
         cal_specs, fast, planner, data / "router-calibration.jsonl", progress
     )
-    selection = paired_experiments(
+    selection_attempts = paired_experiments(
         select_specs, fast, planner, data / "router-selection.jsonl", progress
     )
     results = {}
     for method in fast:
+        fit = eligible_records(fit_attempts, method)
+        calibration = eligible_records(calibration_attempts, method)
+        selection = eligible_records(selection_attempts, method)
+        if not fit or not calibration or not selection:
+            raise ValueError("no supported same-feature routing pairs in a required split")
         x = np.asarray([r["fast"][method]["features"] for r in fit])
         y = np.asarray([r["fast"][method]["incremental_utility"] > 0 for r in fit], dtype=int)
         cx = np.asarray([r["fast"][method]["features"] for r in calibration])
@@ -217,6 +265,17 @@ def train_gates(checkpoints, data, planner, progress=None):
         results[method] = {
             "kind": fitted_kind,
             "fit_states": len(x),
+            "pairing_attempts": {
+                "fit": len(fit_attempts),
+                "calibration": len(calibration_attempts),
+                "selection": len(selection_attempts),
+            },
+            "pairing_excluded_before_outcome": {
+                "fit": len(fit_attempts) - len(fit),
+                "calibration": len(calibration_attempts) - len(calibration),
+                "selection": len(selection_attempts) - len(selection),
+            },
+            "pairing_scope": "exact candidate feature matrix and causal history equality at branch start; hidden OS state not cloned",
             "positive_fit_states": int(y.sum()),
             "calibration_states": len(cx),
             "positive_calibration_states": int(cy.sum()),

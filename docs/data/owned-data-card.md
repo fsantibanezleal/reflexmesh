@@ -5,7 +5,7 @@ The workload consists of designed integration cases executed in disposable local
 | Family | Concrete effect and independent success witness |
 |---|---|
 | C01 document routing | Move a real source file; exact destination content and absent source. |
-| C02 indexing | Write an index; independently recomputed current file SHA256 hashes. |
+| C02 indexing | Persistently reuse unchanged document entries, hash only added/changed content, remove deleted entries; independently recompute full hashes and verify content-read/reuse counters. |
 | C03 validation | Parse JSON and produce accept/quarantine artifact; check exactly the appropriate artifact against raw data. |
 | C04 test recovery | Execute a disposable Python test after configuration repair; check successful result and configuration existence. |
 | C05 HTTP retry | Local server emits one503 before success; independently check fetched seed-specific response. |
@@ -14,22 +14,22 @@ The workload consists of designed integration cases executed in disposable local
 | C08 restart | Start a failed-child replacement; inspect its produced result and terminated process tree. |
 | C09 pressure | Enforce a declared workspace quota against actual cache/report files; verify cleanup and2048-byte output. This is not host disk exhaustion. |
 | C10 dependency workflow | Extract, transform and report real JSON files; independently recompute final arithmetic. |
-| C11 revision conflict | Rebase a concurrent shared file revision, then compare/write; inspect exact revision3 and value. |
-| C12 job collection | Spawn actual compute children producing squares; independently check collected sum13 and completed processes. |
-| C13 planner availability | Controlled2ms availability schedule plus result file. This family models availability; real LLM calls occur in planner methods separately. |
-| C14 argument rejection | Write an explicit unsupported-argument rejection receipt, then invoke only a registered valid action. |
-| C15 untrusted text | Inspect malicious-looking file text as data; verify checksum output and unchanged protected file. |
+| C11 revision conflict | A separate writer changes a file after candidate binding; native admission rejects that stale action; re-observe/rebase and compare/write, then inspect exact revision3 and value. |
+| C12 job collection | Spawn actual compute children without waiting inside spawn; later observe/wait/collect, independently checking sum13 and completed processes. |
+| C13 planner availability | An actual controlled Future produces a structured proposal with goal/input binding; collection validates that binding. This producer is not an LLM; real model calls occur separately in planner methods. |
+| C14 argument rejection | Call actual runtime validation with unsupported arguments, record its exception, then invoke the registered valid action. |
+| C15 untrusted text | Expose bounded attacker text with untrusted provenance to the policy; verify checksum, a real denied authority probe, and unchanged inside/outside canaries. |
 | C16 missing evidence | Inspect a real evidence JSON before invoking the action; verify registered output. |
 | C17 registered novelty | Invoke a differently named registered capability. This simple alias test alone is not an open-world benchmark. |
-| C18 event ordering | Sort actual out-of-order source events and write the latest value; independently inspect expected sequence-derived output. |
-| C19 reliability drift | Local service changes to two transient failures; verify bounded recovery and returned data. |
-| C20 recovery | Reconcile an unknown durable fixture intent with an existing effect; verify one effect and completed journal. Native crash-replay tests separately cover broker recovery. |
+| C18 event ordering | Submit events3,1,2 to native source-sequence validation; reject old events and write the latest accepted native value. |
+| C19 reliability drift | Observe a successful baseline request, then change service reliability to two failures; verify bounded recovery and returned data. |
+| C20 recovery | A worker admits/fsyncs one effect and exits before its receipt; reopen the actual journal to unknown, verify durable effect, reconcile without reexecuting, and independently check one append. |
 
-Every family has nominal, delayed_observation, duplicate_event, stale_conflict, unavailable_dependency and boundary variants. The first four event faults are explicit controlled observations; they are not claimed to reproduce all network, filesystem or operating-system races. The boundary variant supplies an excluded out-of-scope action to the same authority layer used by every policy.
+Every family has nominal, delayed_observation, duplicate_event, stale_conflict, unavailable_dependency and boundary variants. These use distinct causal mechanisms: independently produced later event delivery, actual duplicate inbox/native event deduplication, a real write after binding causing native stale admission, independently produced dependency readiness, and a bounded over-limit payload with actual schema denial. See the [causal scenario audit](../evaluation/causal-scenario-audit.md) for mechanisms, witnesses and limitations. They are controlled fixtures, not a claim to reproduce every operating-system/network race.
 
 The core matrix is20 families x6 variants x10 held-out environment seeds =1200 episodes per method,14400 across12 methods. Training uses five distinct seeds per family/variant (600 episodes) with0.15 epsilon exploration. Validation and calibration each contain120 episodes using separate seeds. All variants and templates are shared across these splits; this is instance generalization, not held-out task-family generalization. A group is an environment seed across related families and variants. Dataset manifests record exact episode IDs, group IDs, seeds, feature schemas, compressed-data hashes and executed transition counts.
 
-The initial collected corpus and fitting jobs preceded a native-receipt correction for C06: the server write and GET verification were real, but the wrapper originally reported request completion as `completed_verified` despite unknown remote effect status. Final evaluation correctly retains an `effect_unknown` workspace lease until a separately admitted status verifier supplies actual GET evidence to `Runtime.reconcile`. This correction does not change the causal feature schema, demonstrated actions, declared rewards or independent task-output labels. Historical training wrapper receipts must not be presented as final-runtime safety evidence. Exact fitting source snapshots were not captured at job launch; final evaluation source and binary hashes are captured before evaluation, with this provenance limitation stated explicitly.
+The initial corpus and fitting runs are archived as superseded development evidence. They preceded both the causal scenario correction and an earlier C06 receipt-status correction. Their post-fit metadata cannot establish exact fitting source or final-runtime safety. Corrected collection/fitting starts only after the scenario audit and writes exact stage-start/end source, native binary, dependency, input and output hashes to `artifacts/training-runs`. C06 retains an `effect_unknown` workspace lease until an actual GET verifier supplies evidence to `Runtime.reconcile`; unresolved outcomes remain unresolved in the learning records.
 
 Teacher action labels are isolated in training/evaluation records. They do not enter policy observations. The executed action, its logging propensity, actual effect receipt, reward and next observed state are recorded separately. Demonstration preference is not identical to verified task success, safety or human intent.
 
