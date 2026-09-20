@@ -304,6 +304,25 @@ def create_app(
         except RuntimeError:
             raise HTTPException(429, "preview capacity exhausted") from None
 
+    @app.get("/api/workspace/recovery")
+    async def workspace_recovery():
+        try:
+            return configured_workspace().recovery()
+        except RuntimeError:
+            raise HTTPException(409, "workspace busy or journal unavailable") from None
+
+    @app.post("/api/workspace/reconcile")
+    async def workspace_reconcile(request: Request):
+        value = await body(request)
+        try:
+            return configured_workspace().reconcile(value)
+        except (ValueError, TypeError, KeyError, OSError):
+            raise HTTPException(
+                422, "recovery review, binding or file evidence is invalid"
+            ) from None
+        except RuntimeError:
+            raise HTTPException(409, "workspace busy or journal unavailable") from None
+
     @app.post("/api/workspace/run")
     async def workspace_run(request: Request):
         value = await body(request)
