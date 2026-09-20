@@ -17,6 +17,9 @@ on:
     types: [published]
 permissions:
   contents: read
+concurrency:
+  group: portable-wheels-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   build:
     strategy:
