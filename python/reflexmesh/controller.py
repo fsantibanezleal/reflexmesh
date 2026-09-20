@@ -55,7 +55,7 @@ class Controller:
     def __init__(
         self,
         runtime: Runtime,
-        policy: Policy,
+        policy: Policy | None = None,
         planner: Any = None,
         *,
         max_goals: int = 128,
@@ -63,10 +63,16 @@ class Controller:
         control_capacity: int = 32,
         max_effects: int = 4,
         tick_seconds: float = 0.01,
+        policy_factory: Callable[[str], Policy] | None = None,
     ):
         if min(max_goals, normal_capacity, control_capacity, max_effects) < 1:
             raise ValueError("controller capacities must be positive")
+        if (policy is None) == (policy_factory is None):
+            raise ValueError("provide either one goal-aware policy or a per-goal policy_factory")
         self.runtime, self.policy = runtime, policy
+        self.policy_factory = policy_factory
+        self._goal_policies: dict[str, Policy] = {}
+        self._goal_policy_locks: dict[str, threading.Lock] = {}
         self.planner = AsyncDeliberator(planner) if planner else None
         self.goals: dict[str, Goal] = {}
         self.max_goals, self.max_effects, self.tick_seconds = max_goals, max_effects, tick_seconds
@@ -95,6 +101,12 @@ class Controller:
             raise ValueError("goals require positive step and time bounds")
         if goal.goal_id in goal.dependencies or any(d not in self.goals for d in goal.dependencies):
             raise ValueError("dependencies must reference previously submitted goals")
+        if self.policy_factory:
+            policy = self.policy_factory(goal.goal_id)
+            if any(policy is previous for previous in self._goal_policies.values()):
+                raise ValueError("policy_factory must return an independent policy per goal")
+            self._goal_policies[goal.goal_id] = policy
+            self._goal_policy_locks[goal.goal_id] = threading.Lock()
         self.goals[goal.goal_id] = goal
 
     def publish(self, event: Event) -> None:
@@ -195,8 +207,10 @@ class Controller:
             if goal.goal_id not in self.inferences:
 
                 def predict():
-                    with self._policy_lock:
-                        return self.policy.predict(observation)
+                    policy = self._goal_policies.get(goal.goal_id, self.policy)
+                    lock = self._goal_policy_locks.get(goal.goal_id, self._policy_lock)
+                    with lock:
+                        return policy.predict(observation)
 
                 self.inferences[goal.goal_id] = (
                     asyncio.create_task(asyncio.to_thread(predict)),
@@ -301,6 +315,14 @@ class Controller:
                 )
             if self.planner:
                 await asyncio.to_thread(self.planner.close)
+            if self._goal_policies:
+                await asyncio.gather(
+                    *(
+                        asyncio.to_thread(policy.close)
+                        for policy in self._goal_policies.values()
+                        if hasattr(policy, "close")
+                    )
+                )
         return {key: goal.state for key, goal in self.goals.items()}
 
 

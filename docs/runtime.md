@@ -43,7 +43,7 @@ Windows Store-backed Python virtualenv redirectors can launch through an activat
 
 When a policy requests delegation, the coordinator submits a bounded slow request. Arrival must match goal identity and observation revision, then the executor still rechecks resources and authority. Request cancellation does not imply a provider stopped billing or computing. The adapter records whether the future was cancelled before execution. A stale model response is discarded.
 
-Factories should use stable candidate IDs and causal revisions. Re-reading an unchanged file must not invent a new resource revision. Learned policy state is retained by goal ID; authority is always read from the native broker.
+Factories should use stable candidate IDs and causal revisions. Re-reading an unchanged file must not invent a new resource revision. For concurrent goals with episode-scoped policies such as M10 or M12, construct `Controller(runtime, policy_factory=lambda goal_id: make_policy("M12", checkpoints, planner))`. Each goal receives its own recurrent/effect residuals, planner queue and computation budget. The controller closes factory-owned policies on exit after joining inference and effects. A factory returning the same instance twice is rejected. The alternative positional `policy` is shared, serialized and caller-owned; it is appropriate for a stateless policy or one that explicitly isolates all state by goal ID. A learned model's weights may be shared read-only in a custom factory, but its mutable episode state must not be shared. Authority is always read from the native broker.
 
 ## Local service
 

@@ -109,3 +109,50 @@ async def test_urgent_cancel_remains_responsive_during_slow_policy(tmp_path):
         finally:
             release.set()
             await asyncio.wait_for(task, 3)
+
+
+@pytest.mark.asyncio
+async def test_concurrent_goals_have_independent_policy_state_and_owned_cleanup(tmp_path):
+    policies = {}
+
+    class Stateful(First):
+        def __init__(self, name):
+            self.name, self.calls, self.closed = name, 0, False
+
+        def predict(self, observation):
+            assert observation.goal_id == self.name
+            self.calls += 1
+            if self.calls == 1:
+                return Decision("stateful", None, "wait")
+            return super().predict(observation)
+
+        def close(self):
+            self.closed = True
+
+    def factory(name):
+        policies[name] = Stateful(name)
+        return policies[name]
+
+    with Runtime(tmp_path, ("file.write",)) as runtime:
+        WorkspaceFiles(tmp_path).register(runtime)
+        controller = Controller(runtime, policy_factory=factory)
+        controller.submit(write_goal("first", "a.txt", "A"))
+        controller.submit(write_goal("second", "b.txt", "B"))
+        assert await controller.run(until_idle=True) == {
+            "first": "succeeded",
+            "second": "succeeded",
+        }
+        assert all(p.calls == 2 and p.closed for p in policies.values())
+        assert (tmp_path / "a.txt").read_text() == "A"
+        assert (tmp_path / "b.txt").read_text() == "B"
+
+
+def test_factory_cannot_accidentally_share_episode_state(tmp_path):
+    with Runtime(tmp_path, ()) as runtime:
+        shared = First()
+        controller = Controller(runtime, policy_factory=lambda _: shared)
+        controller.submit(write_goal("a", "a", "a"))
+        with pytest.raises(ValueError, match="independent policy"):
+            controller.submit(write_goal("b", "b", "b"))
+        with pytest.raises(ValueError, match="either"):
+            Controller(runtime, shared, policy_factory=lambda _: First())
