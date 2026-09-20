@@ -11,14 +11,40 @@ requires-python = ">=3.11"
 license = "Apache-2.0"
 authors = [{name = "Felipe Santibanez-Leal"}]
 dependencies = ["numpy>=2.0,<3", "pydantic>=2.10,<3"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Rust",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Operating System :: MacOS",
+]
+
+[project.urls]
+Repository = "https://github.com/fsantibanezleal/reflexmesh"
+Issues = "https://github.com/fsantibanezleal/reflexmesh/issues"
+Documentation = "https://github.com/fsantibanezleal/reflexmesh/tree/main/docs"
 
 [project.optional-dependencies]
 train = ["torch>=2.6", "scikit-learn>=1.6", "xgboost>=3.0", "gymnasium>=1.0", "sb3-contrib>=2.6", "onnx>=1.17", "onnxruntime>=1.20"]
 server = ["fastapi>=0.135,<1", "uvicorn>=0.34", "httpx>=0.28"]
+mcp = ["jsonschema>=4.23,<5", "regex>=2024.11"]
 dev = ["pytest>=8", "pytest-asyncio>=0.25", "ruff>=0.11", "build>=1.2", "twine>=6"]
 
 [tool.setuptools.packages.find]
 where = ["python"]
+
+[tool.setuptools.package-data]
+reflexmesh = ["py.typed", "*.json"]
+
+[[tool.setuptools-rust.ext-modules]]
+target = "reflexmesh._native"
+path = "Cargo.toml"
+binding = "PyO3"
+
+[project.scripts]
+reflexmesh = "reflexmesh.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
