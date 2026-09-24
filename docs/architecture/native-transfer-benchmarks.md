@@ -104,22 +104,23 @@ latency excludes fingerprinting, observations, journal fsync and external effect
 
 `native-transfer-results.json` is derived from the preserved raw artifacts:
 eight ToolSandbox cases evaluated with mean official similarity
-**0.9546040025**, and four tau2 retail tasks with official reward **1.0** each.
+**0.9546040025**, and four tau2 retail tasks with mean official reward **0.75**.
 ToolSandbox similarity is a continuous upstream metric, not a binary task
 success rate. The tau2 tasks are related variants in one retail context. In
 tasks 2 and 3 the upstream action-check details include failures (a referenced
 product is absent), while the specified reward basis remains DB plus
 COMMUNICATE. The raw evaluator output and summary retain that distinction.
 
-The first tau2 run was interrupted after tasks 0 and 1; a separate run completed
-2 and 3. A preliminary concurrent ToolSandbox run had one HTTP 500; a complete
-isolated rerun followed. Neither failure was relabeled a successful attempt.
+The selected final runs use the corrected native wheel and complete all eight
+ToolSandbox cases and all four tau2 tasks. Earlier runs include an interrupted
+tau2 attempt and a preliminary ToolSandbox HTTP 500. Neither failure was
+relabeled a successful attempt, and earlier higher tau2 scores are superseded.
 The inventory includes failed probes and incomplete manifests. Run selection is
 explicit, and duplicate selected case IDs are rejected rather than selecting
 favorable retries. There are 47 actual acting admissions in the selected set.
 
 ```powershell
-python -m reflexmesh.benchmarks.summarize --selected-runs toolsandbox-isolated-seed0 tau2-retail-seed0 tau2-retail-remaining-seed0 --output docs/architecture/native-transfer-results.json
+python -m reflexmesh.benchmarks.summarize --selected-runs toolsandbox-causal-final-seed0 tau2-causal-final-retail-seed0 --output docs/architecture/native-transfer-results.json
 ```
 
 These bounded integration subsets are not leaderboard-comparable, a full

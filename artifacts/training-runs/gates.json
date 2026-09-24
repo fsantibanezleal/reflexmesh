@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "stage": "gates",
+  "status": "complete",
+  "started_at": "2026-09-20T23:38:39.586386+00:00",
+  "capture_timing": "before stage imports and fitting/collection execution",
+  "arguments": {
+    "stage": "gates",
+    "artifacts": "artifacts",
+    "methods": [
+      "M01",
+      "M02",
+      "M03",
+      "M04",
+      "M05",
+      "M06",
+      "M07",
+      "M08",
+      "M09",
+      "M10",
+      "M11",
+      "M12"
+    ],
+    "seeds": 10,
+    "train_seeds": 5,
+    "ppo_steps": 16384,
+    "model": "qwen3.5:4b",
+    "output": null
+  },
+  "data_sha256_before": {
+    "calibration.episodes.jsonl.gz": "52dafd671f3817ba85b7b530ac8b3d0fae7fed03fe54dda39d661672528bca82",
+    "calibration.manifest.json": "b0a820a74d7e1deaadadf477f4b2b5b1d8d7c2bea21b5590d1895b30c2068c14",
+    "router-calibration.jsonl": "7a54ee04083944b14f2f0ed5f3dcc9024c376c30bffad6d3072b4d65df9cbdf2",
+    "router-fit.jsonl": "c394d60131d1545f702fd37ad48901469b6d357116f2fc0aaea0a0b715568f45",
+    "router-selection.jsonl": "00d320378579dff2a0790c1eeee95c7a1f00efa0ed58ef052e47a37ad0dc7073",
+    "train.episodes.jsonl.gz": "801c200ddd955d0c20488b728c5796c2f55f9f6afcd6af1044bc21393c879a75",
+    "train.manifest.json": "f73127499db3807578ccb3112635ba3c1c0599290e74809c05ae63784ddd9ae9",
+    "validation.episodes.jsonl.gz": "f0b23d02442d643feeaf77594e5e11c58207a383bf71715713ba9420e4ae5b87",
+    "validation.manifest.json": "4cb4d370d2b171d0dbf1a193951d34fcd4d92683935e423e92fab4b72f5d06f6"
+  },
+  "installation_before": {
+    "source_sha256": {
+      "contracts.py": "85c0c60f01f4a4ba4e9ec8ce06092935c2d6b0d565c984f095d997ddb8d9f33d",
+      "features.py": "0215d853f9aa7a06d2809c9623937bff834c3b062ba5dfc53e9e34082aca4569",
+      "runtime.py": "f64ae33a6ee2288d6ba4fab5c5b36d7244588ca7f54d189e797897af85457052",
+      "effectors.py": "3a79111cfb1eaa7e22ac8f03b59976e582d051ada95023142a3e832d131038c2",
+      "planners.py": "18aee7a94aea2b9dfeadcb2aed5db2a7932b0f068fbd8e5f652d184b54e623af",
+      "processes.py": "009ef0fe95aee870acf4667ff5272d869f14402c1d38daac02f211fa06665342",
+      "pipeline.py": "bad7595d9eeb6fe80f241673ad7bf5bc68b7ef8297cd9d503e0d35b073240c0e",
+      "policies\\classical.py": "1710f1d00345bdb8a9074742a24db7703829280b86ea7339a79aee5d98d7816b",
+      "policies\\control.py": "71b412a43a96620389d794246b19e6cc0eb47fc85d493a17263d7e5d26db7d59",
+      "policies\\planning.py": "dcee94fbb78e655cdb9fa108f989acdc9c24d10d77c7a42980664656c6a61819",
+      "policies\\recurrent.py": "93e7beb7e85a43759b9dea79f2941bc97d612e35e2c980f95ebf3827f06d111b",
+      "policies\\rl.py": "584c0f47099c2203a4a20cb063e3d52d88a29f600ad4685865680bf3bc4d682b",
+      "policies\\rules.py": "965fbd0b41c350813c10557af73b3c1bc9aafb03b59c30c155f6f7411f0955de",
+      "policies\\__init__.py": "6b06c737c1f72aded2371e9837134a227e54fbcdd321dedc9faf9a2f8117ec9a",
+      "learning\\dataset.py": "8dd1b3a763ecd2c15a4cf0e390debac8a37074ee8634f601954005fec8ea90bc",
+      "learning\\provenance.py": "cc5ac067208d47e6b7427e74dfc29b488f240079c8d66855f8173ff2d08a7f8d",
+      "learning\\routing.py": "3aa4e19eb6a55444e263f2733deb30259b15f62ed8891eb3cedf85130c60663d",
+      "learning\\train.py": "6a24af3fbb2c694c71e3816f17b395d72431f138cf54a9723fbe08c1d87dcd24",
+      "learning\\__init__.py": "03f0c6271023b43674e06c37c5661e812c394506bf0976cee2be0079f655744c",
+      "environments\\crash.py": "71829cec82a55e0ddc31aba8ab2619d0d250cff9a38801aed55188e146f977f9",
+      "environments\\faults.py": "fdc5b51c034fb0ebf88d8b043b1ce600044e78691881ed89bda547192efea3f2",
+      "environments\\gym.py": "d2706cfb9773c07464c8acd5bdc72c0236fc53b01e5c92bbb2f5ccfdb986c3e6",
+      "environments\\software.py": "348f2f5e2a79243c88caa4ac6e668ea5048764337255088c7b5838df7dc5ad9e",
+      "environments\\structural.py": "964da6e1eff02e1c1367e41c1a8cfbcbf997476ef56122c2a2262c986f2db895",
+      "environments\\__init__.py": "819292438da9beacdc96f71e9ef1ff5e96524f171a24d502e21beb74738d91d1",
+      "evaluation\\runner.py": "8d179978696ab774f30a5c64bfd6212ea81cd851aa5ef57de11177154a7b1745",
+      "evaluation\\__init__.py": "33b7511584ef273810893ee414aeb084949fb4f31540324907866ca55d9ab1c0"
+    },
+    "native_source_sha256": {
+      "Cargo.lock": "c89ad9b6caa248761e85f839a9bde73e468627902e96442d36a8bbaad5e88f28",
+      "Cargo.toml": "f4933884f721b09aee153d70872fb44488af4f3986a5a6e802fc51481c5641ab",
+      "rust/contracts.rs": "80faa2ad867c4bdda2fca98d3c068c577217fa29465235187063c1f22b423dc9",
+      "rust/core.rs": "9ebf227d2e152c59dd0fdf613f954051ef0d5b60c11328b042fa41fa48b22fbf",
+      "rust/lib.rs": "f84d221f521c35905377dcc4522111206ab27d564059845983a28f791acc7cfe",
+      "rust/policy.rs": "964cd3c64e97ea3fa9719dde0aa495136943d33b85d74eb2f95af0aea724c67b",
+      "rust/tests.rs": "e5fe531edeb55fb0cb662f91645f5dbab07b87602916b3d12f931896366e4820"
+    },
+    "native_binary": {
+      "name": "_native.cp312-win_amd64.pyd",
+      "sha256": "f1ed93084ccb5081e247bb14952d17a7ab3c162a8f940c993bd96aa84be1880c"
+    },
+    "checkpoint_sha256": {
+      "classical-training.json": "2bfd54e31c7a49327c12e1cba61b198c6105f33f81fee5f3f325c24ffd9bbaf0",
+      "M03.joblib": "ec09ac1a5b718e6a0ed1bc05ce5ad0c435953456edbce3513dbe47e58e26c63b",
+      "M03.linear.json": "aaf9d9362f10c5cd984ec00babf215e3019e6761c38cbb2e6df8662322fdfd78",
+      "M04.joblib": "2466cc1f5f1bc4d26eff475a2dd622ce458e8f1da17ce2aa2a19827202e56e5d",
+      "M04.trees.json": "9ae8af37fa9b97f5e8f80be42c0b142119dcffcb1900989040f30a12e7373b09",
+      "M04.xgboost.json": "3f18f738a41405a166795afe9546a687a9a72df21152ebbbd51990bf3ffb6fa2",
+      "M05.metadata.json": "c61038e255c2191fdf96c3576e7a64774220115a8e5d5439e1739deed3c47584",
+      "M05.onnx": "996618f7b4453325fd244c6b7aa1fbb63edceeb5e578b9556bf41d5fed2caf99",
+      "M05.pt": "3a438375cc08f25dc85b9be8a24f06592f650dcf1a0a6073f6728019494d4cba",
+      "M06.npz": "91758d1ad72ef30c071f4da84ebf82fe7d5f79112039c57cc4d7054ab6ed6c60",
+      "M07.zip": "b1ab8b4d0cd727f4ea7ea68d0c464f552ce9891e7b1c25b8cf3dfb7b48f24647",
+      "M08.pt": "5d75a703c358d0e5f930005a82c33dc8907fa1089be84ee50dcbdf775af81395",
+      "M11.gate.joblib": "53f475ea60bc841bf5eb47da7cb709b33e2815f44e27b64f67c3bf42d6078c76",
+      "M12.gate.joblib": "883f82288c8562888a5fe31f14be6a351f6e30e81798089b73f13bdb723982ef",
+      "ppo-training.json": "957f6e79b9e1b12248bd39914f599fb6edfdafd542b8699c9c3fade139339a48",
+      "recurrent-training.json": "ffd77994348e42e6552d0e5968e5463e85e501d3aaa5e03a0fdc64a37ef5cd14",
+      "routing-training.json": "267431b2bc6cded7adfe10bcd9f3eb9f0805f2038b0239df00dcd24e10f228cf",
+      "transition-training.json": "f2176f9587b5f569bffe00b4aba46776ccf51947d6f66496f706b6aa60855bde"
+    },
+    "spec_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "xgboost": "3.4.1",
+      "torch": "2.14.0",
+      "onnxruntime": "1.30.0",
+      "onnx": "1.23.0",
+      "joblib": "1.6.0",
+      "httpx": "0.28.1",
+      "sb3-contrib": "2.9.0",
+      "stable-baselines3": "2.9.0",
+      "gymnasium": "1.3.0"
+    },
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "planner": {
+      "model": "qwen3.5:4b",
+      "registry": [
+        {
+          "name": "qwen3.5:4b",
+          "model": "qwen3.5:4b",
+          "modified_at": "2026-09-20T13:35:49.4851444-03:00",
+          "size": 3389983735,
+          "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen35",
+            "families": [
+              "qwen35"
+            ],
+            "parameter_size": "4.7B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560
+          },
+          "capabilities": [
+            "vision",
+            "completion",
+            "tools",
+            "thinking"
+          ]
+        }
+      ],
+      "runtime_version": {
+        "version": "0.34.0"
+      }
+    },
+    "inference_device": "CPU for fitted policies; planner device reported by its runtime",
+    "torch_inference_threads": 2
+  },
+  "finished_at": "2026-09-21T00:00:59.749312+00:00",
+  "elapsed_seconds": 1340.1626825000276,
+  "data_sha256_after": {
+    "calibration.episodes.jsonl.gz": "52dafd671f3817ba85b7b530ac8b3d0fae7fed03fe54dda39d661672528bca82",
+    "calibration.manifest.json": "b0a820a74d7e1deaadadf477f4b2b5b1d8d7c2bea21b5590d1895b30c2068c14",
+    "router-calibration.jsonl": "731325b5330aefb17d620e5c70141ee434fbaf5b5132c189abbec0cfe853b692",
+    "router-fit.jsonl": "acac78ccfd1128eba9444953cc796312a0143fb99501a7e5da11c60a4d6db0a2",
+    "router-selection.jsonl": "c46e678e66ab70172060e113623053971a966e62303d048d2c5e9cb61aa31469",
+    "train.episodes.jsonl.gz": "801c200ddd955d0c20488b728c5796c2f55f9f6afcd6af1044bc21393c879a75",
+    "train.manifest.json": "f73127499db3807578ccb3112635ba3c1c0599290e74809c05ae63784ddd9ae9",
+    "validation.episodes.jsonl.gz": "f0b23d02442d643feeaf77594e5e11c58207a383bf71715713ba9420e4ae5b87",
+    "validation.manifest.json": "4cb4d370d2b171d0dbf1a193951d34fcd4d92683935e423e92fab4b72f5d06f6"
+  },
+  "installation_after": {
+    "source_sha256": {
+      "contracts.py": "85c0c60f01f4a4ba4e9ec8ce06092935c2d6b0d565c984f095d997ddb8d9f33d",
+      "features.py": "0215d853f9aa7a06d2809c9623937bff834c3b062ba5dfc53e9e34082aca4569",
+      "runtime.py": "f64ae33a6ee2288d6ba4fab5c5b36d7244588ca7f54d189e797897af85457052",
+      "effectors.py": "3a79111cfb1eaa7e22ac8f03b59976e582d051ada95023142a3e832d131038c2",
+      "planners.py": "18aee7a94aea2b9dfeadcb2aed5db2a7932b0f068fbd8e5f652d184b54e623af",
+      "processes.py": "009ef0fe95aee870acf4667ff5272d869f14402c1d38daac02f211fa06665342",
+      "pipeline.py": "bad7595d9eeb6fe80f241673ad7bf5bc68b7ef8297cd9d503e0d35b073240c0e",
+      "policies\\classical.py": "1710f1d00345bdb8a9074742a24db7703829280b86ea7339a79aee5d98d7816b",
+      "policies\\control.py": "71b412a43a96620389d794246b19e6cc0eb47fc85d493a17263d7e5d26db7d59",
+      "policies\\planning.py": "dcee94fbb78e655cdb9fa108f989acdc9c24d10d77c7a42980664656c6a61819",
+      "policies\\recurrent.py": "93e7beb7e85a43759b9dea79f2941bc97d612e35e2c980f95ebf3827f06d111b",
+      "policies\\rl.py": "584c0f47099c2203a4a20cb063e3d52d88a29f600ad4685865680bf3bc4d682b",
+      "policies\\rules.py": "965fbd0b41c350813c10557af73b3c1bc9aafb03b59c30c155f6f7411f0955de",
+      "policies\\__init__.py": "6b06c737c1f72aded2371e9837134a227e54fbcdd321dedc9faf9a2f8117ec9a",
+      "learning\\dataset.py": "8dd1b3a763ecd2c15a4cf0e390debac8a37074ee8634f601954005fec8ea90bc",
+      "learning\\provenance.py": "cc5ac067208d47e6b7427e74dfc29b488f240079c8d66855f8173ff2d08a7f8d",
+      "learning\\routing.py": "3aa4e19eb6a55444e263f2733deb30259b15f62ed8891eb3cedf85130c60663d",
+      "learning\\train.py": "6a24af3fbb2c694c71e3816f17b395d72431f138cf54a9723fbe08c1d87dcd24",
+      "learning\\__init__.py": "03f0c6271023b43674e06c37c5661e812c394506bf0976cee2be0079f655744c",
+      "environments\\crash.py": "71829cec82a55e0ddc31aba8ab2619d0d250cff9a38801aed55188e146f977f9",
+      "environments\\faults.py": "fdc5b51c034fb0ebf88d8b043b1ce600044e78691881ed89bda547192efea3f2",
+      "environments\\gym.py": "d2706cfb9773c07464c8acd5bdc72c0236fc53b01e5c92bbb2f5ccfdb986c3e6",
+      "environments\\software.py": "348f2f5e2a79243c88caa4ac6e668ea5048764337255088c7b5838df7dc5ad9e",
+      "environments\\structural.py": "964da6e1eff02e1c1367e41c1a8cfbcbf997476ef56122c2a2262c986f2db895",
+      "environments\\__init__.py": "819292438da9beacdc96f71e9ef1ff5e96524f171a24d502e21beb74738d91d1",
+      "evaluation\\runner.py": "8d179978696ab774f30a5c64bfd6212ea81cd851aa5ef57de11177154a7b1745",
+      "evaluation\\__init__.py": "33b7511584ef273810893ee414aeb084949fb4f31540324907866ca55d9ab1c0"
+    },
+    "native_source_sha256": {
+      "Cargo.lock": "c89ad9b6caa248761e85f839a9bde73e468627902e96442d36a8bbaad5e88f28",
+      "Cargo.toml": "f4933884f721b09aee153d70872fb44488af4f3986a5a6e802fc51481c5641ab",
+      "rust/contracts.rs": "80faa2ad867c4bdda2fca98d3c068c577217fa29465235187063c1f22b423dc9",
+      "rust/core.rs": "9ebf227d2e152c59dd0fdf613f954051ef0d5b60c11328b042fa41fa48b22fbf",
+      "rust/lib.rs": "f84d221f521c35905377dcc4522111206ab27d564059845983a28f791acc7cfe",
+      "rust/policy.rs": "964cd3c64e97ea3fa9719dde0aa495136943d33b85d74eb2f95af0aea724c67b",
+      "rust/tests.rs": "e5fe531edeb55fb0cb662f91645f5dbab07b87602916b3d12f931896366e4820"
+    },
+    "native_binary": {
+      "name": "_native.cp312-win_amd64.pyd",
+      "sha256": "f1ed93084ccb5081e247bb14952d17a7ab3c162a8f940c993bd96aa84be1880c"
+    },
+    "checkpoint_sha256": {
+      "classical-training.json": "2bfd54e31c7a49327c12e1cba61b198c6105f33f81fee5f3f325c24ffd9bbaf0",
+      "M03.joblib": "ec09ac1a5b718e6a0ed1bc05ce5ad0c435953456edbce3513dbe47e58e26c63b",
+      "M03.linear.json": "aaf9d9362f10c5cd984ec00babf215e3019e6761c38cbb2e6df8662322fdfd78",
+      "M04.joblib": "2466cc1f5f1bc4d26eff475a2dd622ce458e8f1da17ce2aa2a19827202e56e5d",
+      "M04.trees.json": "9ae8af37fa9b97f5e8f80be42c0b142119dcffcb1900989040f30a12e7373b09",
+      "M04.xgboost.json": "3f18f738a41405a166795afe9546a687a9a72df21152ebbbd51990bf3ffb6fa2",
+      "M05.metadata.json": "c61038e255c2191fdf96c3576e7a64774220115a8e5d5439e1739deed3c47584",
+      "M05.onnx": "996618f7b4453325fd244c6b7aa1fbb63edceeb5e578b9556bf41d5fed2caf99",
+      "M05.pt": "3a438375cc08f25dc85b9be8a24f06592f650dcf1a0a6073f6728019494d4cba",
+      "M06.npz": "91758d1ad72ef30c071f4da84ebf82fe7d5f79112039c57cc4d7054ab6ed6c60",
+      "M07.zip": "b1ab8b4d0cd727f4ea7ea68d0c464f552ce9891e7b1c25b8cf3dfb7b48f24647",
+      "M08.pt": "5d75a703c358d0e5f930005a82c33dc8907fa1089be84ee50dcbdf775af81395",
+      "M11.gate.joblib": "b0f3c8c8b280fa4d24885336cbf78c4ec3f13ed71f748e9b9b8d17d72390c296",
+      "M12.gate.joblib": "a9930d888ebcc6bdd45342d01853d900ff82326ac6e3a3d77dcc57a3e07e6709",
+      "ppo-training.json": "957f6e79b9e1b12248bd39914f599fb6edfdafd542b8699c9c3fade139339a48",
+      "recurrent-training.json": "ffd77994348e42e6552d0e5968e5463e85e501d3aaa5e03a0fdc64a37ef5cd14",
+      "routing-training.json": "90943eab0a58583b7b8fb4a89715278ef53561b7fb9f19e8fdf235d3ed70ca35",
+      "transition-training.json": "f2176f9587b5f569bffe00b4aba46776ccf51947d6f66496f706b6aa60855bde"
+    },
+    "spec_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "xgboost": "3.4.1",
+      "torch": "2.14.0",
+      "onnxruntime": "1.30.0",
+      "onnx": "1.23.0",
+      "joblib": "1.6.0",
+      "httpx": "0.28.1",
+      "sb3-contrib": "2.9.0",
+      "stable-baselines3": "2.9.0",
+      "gymnasium": "1.3.0"
+    },
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "planner": {
+      "model": "qwen3.5:4b",
+      "registry": [
+        {
+          "name": "qwen3.5:4b",
+          "model": "qwen3.5:4b",
+          "modified_at": "2026-09-20T13:35:49.4851444-03:00",
+          "size": 3389983735,
+          "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen35",
+            "families": [
+              "qwen35"
+            ],
+            "parameter_size": "4.7B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560
+          },
+          "capabilities": [
+            "vision",
+            "completion",
+            "tools",
+            "thinking"
+          ]
+        }
+      ],
+      "runtime_version": {
+        "version": "0.34.0"
+      }
+    },
+    "inference_device": "CPU for fitted policies; planner device reported by its runtime",
+    "torch_inference_threads": 2
+  },
+  "source_unchanged": true
+}

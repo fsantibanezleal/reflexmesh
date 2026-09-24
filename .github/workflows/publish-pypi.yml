@@ -6,22 +6,16 @@ on:
         description: 'Publish built distributions to PyPI (release authorization required)'
         type: boolean
         default: false
-  pull_request:
-    paths:
-      - '.github/workflows/publish-pypi.yml'
-      - 'pyproject.toml'
-      - 'setup.py'
-      - 'Cargo.*'
-      - 'rust/**'
   release:
     types: [published]
 permissions:
   contents: read
 concurrency:
-  group: portable-wheels-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   build:
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -55,6 +49,7 @@ jobs:
     if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish)
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: pypi
       url: https://pypi.org/p/reflexmesh

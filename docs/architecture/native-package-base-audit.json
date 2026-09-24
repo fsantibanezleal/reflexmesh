@@ -5,7 +5,7 @@
   "installed_from_site_packages": true,
   "engine": "rust-pyo3",
   "extension": "_native.cp312-win_amd64.pyd",
-  "extension_sha256": "7900b3412fc6816bb93902d5643cb0929cfa8a6f00c2067d57eb20b820b09b8a",
+  "extension_sha256": "f1ed93084ccb5081e247bb14952d17a7ab3c162a8f940c993bd96aa84be1880c",
   "native_source_sha256": {
     "Cargo.lock": "c89ad9b6caa248761e85f839a9bde73e468627902e96442d36a8bbaad5e88f28",
     "Cargo.toml": "f4933884f721b09aee153d70872fb44488af4f3986a5a6e802fc51481c5641ab",
@@ -15,7 +15,7 @@
     "rust/policy.rs": "964cd3c64e97ea3fa9719dde0aa495136943d33b85d74eb2f95af0aea724c67b",
     "rust/tests.rs": "e5fe531edeb55fb0cb662f91645f5dbab07b87602916b3d12f931896366e4820"
   },
-  "package_python_manifest_sha256": "185092e279c0e53048985d6be80296a8201c0afb41ae26c62d547c59abd595ba",
+  "package_python_manifest_sha256": "53439a892a6d645ac9f03553366e8209a995af90d44a23c64e8b925d9400f9f8",
   "optional_frameworks_available": {
     "torch": false,
     "sklearn": false,
@@ -139,34 +139,6 @@
                 "status": "running"
               }
             ]
-          }
-        }
-      ]
-    },
-    "M03": {
-      "case": "C01/nominal/82000",
-      "actual_outcome_verified": true,
-      "decisions": [
-        {
-          "candidate_id": "a-move",
-          "diagnostics": {
-            "probability_target": "verified_demonstration_action",
-            "safety_bound": false,
-            "inference_backend": "native_cached"
-          }
-        }
-      ]
-    },
-    "M04": {
-      "case": "C01/nominal/82000",
-      "actual_outcome_verified": true,
-      "decisions": [
-        {
-          "candidate_id": "a-move",
-          "diagnostics": {
-            "probability_target": "verified_demonstration_action",
-            "safety_bound": false,
-            "inference_backend": "native_cached"
           }
         }
       ]
