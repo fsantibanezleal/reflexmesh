@@ -1,5 +1,7 @@
 import time
+from concurrent.futures import Future
 from dataclasses import replace
+from types import SimpleNamespace
 
 import numpy as np
 from reflexmesh.environments import CaseSpec, SoftwareEnvironment
@@ -63,14 +65,23 @@ def test_deliberation_hold_preserves_steps_and_applies_three_real_arrivals():
         policy.close()
 
 
-def test_changed_binding_discards_proposal_and_ttl_bounds_affected_hold():
+def test_changed_binding_discards_proposal_and_ttl_bounds_affected_hold(monkeypatch):
+    from reflexmesh.policies import control
+
+    clock = [100.0]
+    monkeypatch.setattr(control, "time", SimpleNamespace(monotonic=lambda: clock[0]))
     policy = controller(SlowPlanner(0.3), planner_ttl_ms=10, max_planner_calls=1)
+    policy.executor.shutdown(wait=True)
+    pending = Future()
+    policy.executor = SimpleNamespace(
+        submit=lambda *_: pending, shutdown=lambda **_: pending.cancel()
+    )
     try:
         with SoftwareEnvironment(CaseSpec("C01", "nominal", 41000)) as env:
             obs = env.observe()
             decision = policy.predict(obs)
             assert decision.mode == "wait"
-            time.sleep(0.012)
+            clock[0] += 0.012
             next_decision = policy.predict(obs)
             assert next_decision.mode == "act" and next_decision.diagnostics["planner_timeout"]
     finally:
