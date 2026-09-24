@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "package_version": "0.1.0",
+  "installed_from_site_packages": true,
+  "engine": "rust-pyo3",
+  "extension": "_native.cp312-win_amd64.pyd",
+  "extension_sha256": "f1ed93084ccb5081e247bb14952d17a7ab3c162a8f940c993bd96aa84be1880c",
+  "native_source_sha256": {
+    "Cargo.lock": "c89ad9b6caa248761e85f839a9bde73e468627902e96442d36a8bbaad5e88f28",
+    "Cargo.toml": "f4933884f721b09aee153d70872fb44488af4f3986a5a6e802fc51481c5641ab",
+    "rust/contracts.rs": "80faa2ad867c4bdda2fca98d3c068c577217fa29465235187063c1f22b423dc9",
+    "rust/core.rs": "9ebf227d2e152c59dd0fdf613f954051ef0d5b60c11328b042fa41fa48b22fbf",
+    "rust/lib.rs": "f84d221f521c35905377dcc4522111206ab27d564059845983a28f791acc7cfe",
+    "rust/policy.rs": "964cd3c64e97ea3fa9719dde0aa495136943d33b85d74eb2f95af0aea724c67b",
+    "rust/tests.rs": "e5fe531edeb55fb0cb662f91645f5dbab07b87602916b3d12f931896366e4820"
+  },
+  "package_python_manifest_sha256": "53439a892a6d645ac9f03553366e8209a995af90d44a23c64e8b925d9400f9f8",
+  "optional_frameworks_available": {
+    "torch": false,
+    "sklearn": false,
+    "xgboost": false,
+    "gymnasium": false,
+    "sb3_contrib": false,
+    "onnxruntime": false
+  },
+  "optional_frameworks_imported": [],
+  "base_only_required": true,
+  "file_effect_and_replay": "passed",
+  "policies": {
+    "M01": {
+      "case": "C01/nominal/82000",
+      "actual_outcome_verified": true,
+      "decisions": [
+        {
+          "candidate_id": "a-move",
+          "diagnostics": {
+            "operation": "move",
+            "learned": false
+          }
+        }
+      ]
+    },
+    "M02": {
+      "case": "C01/nominal/82000",
+      "actual_outcome_verified": true,
+      "decisions": [
+        {
+          "candidate_id": "a-move",
+          "diagnostics": {
+            "tree_status": "running",
+            "node_trace": [
+              {
+                "node": "refresh-stale-condition",
+                "status": "failure"
+              },
+              {
+                "node": "ack-duplicate-condition",
+                "status": "failure"
+              },
+              {
+                "node": "resolve-dependency-condition",
+                "status": "failure"
+              },
+              {
+                "node": "cancel-running-condition",
+                "status": "failure"
+              },
+              {
+                "node": "validate-available",
+                "status": "failure"
+              },
+              {
+                "node": "run_test-available",
+                "status": "failure"
+              },
+              {
+                "node": "http_post-available",
+                "status": "failure"
+              },
+              {
+                "node": "http_get-available",
+                "status": "failure"
+              },
+              {
+                "node": "restart-available",
+                "status": "failure"
+              },
+              {
+                "node": "cleanup-available",
+                "status": "failure"
+              },
+              {
+                "node": "extract-available",
+                "status": "failure"
+              },
+              {
+                "node": "cas_write-available",
+                "status": "failure"
+              },
+              {
+                "node": "spawn-available",
+                "status": "failure"
+              },
+              {
+                "node": "collect-available",
+                "status": "failure"
+              },
+              {
+                "node": "reject-available",
+                "status": "failure"
+              },
+              {
+                "node": "reconcile-available",
+                "status": "failure"
+              },
+              {
+                "node": "reorder-available",
+                "status": "failure"
+              },
+              {
+                "node": "invoke-available",
+                "status": "failure"
+              },
+              {
+                "node": "untrusted-content",
+                "status": "failure"
+              },
+              {
+                "node": "index-changed-content-condition",
+                "status": "failure"
+              },
+              {
+                "node": "move-available",
+                "status": "success"
+              },
+              {
+                "node": "default-move",
+                "status": "running"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "limitations": "Installation smoke and one actual routing task; not the release outcome matrix"
+}

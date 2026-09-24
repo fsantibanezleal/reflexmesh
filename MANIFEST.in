@@ -1,0 +1,3 @@
+include Cargo.toml Cargo.lock LICENSE README.md
+recursive-include rust *.rs
+recursive-include python/reflexmesh *.json

@@ -1,0 +1,5 @@
+# Preserve exact experiment bytes referenced by provenance and trace digests.
+artifacts/** -text -diff
+docs/evaluation/*.json -text whitespace=cr-at-eol
+docs/architecture/*audit.json -text whitespace=cr-at-eol
+docs/architecture/native-transfer-results.json -text whitespace=cr-at-eol
