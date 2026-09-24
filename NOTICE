@@ -1,0 +1,6 @@
+reflexmesh
+Copyright 2026 Felipe Santibanez-Leal
+
+Authored source is licensed under Apache-2.0. External models, benchmark tasks,
+datasets and their dependencies retain their own licenses and terms. Their
+weights and raw datasets are not bundled in this package.

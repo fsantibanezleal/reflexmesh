@@ -1,0 +1,45 @@
+{
+  "extension": "_native.dll",
+  "native_engine": "rust-pyo3",
+  "note": "Numerical export parity, not outcome generalization or safety calibration evidence",
+  "results": {
+    "M03": {
+      "batch_size": 32,
+      "call_latency_ms": {
+        "50": 0.7264999999999999,
+        "95": 0.935825,
+        "99": 1.062365
+      },
+      "feature_dimension": 934,
+      "max_abs_probability_error": 7.882583474838611e-15,
+      "mean_abs_probability_error": 3.589048933900069e-17,
+      "model_sha256": "6484fce0702bcd44e0feadcdb7fcbcec048583be6e67b5c84ee16b03dfed930f",
+      "passed": true,
+      "split_thresholds": 81,
+      "timing_scope": "JSON model parse + feature parse + Rust batch scoring + return decode; excludes Python feature construction",
+      "tolerance": 1e-05,
+      "vectors": 499
+    },
+    "M04": {
+      "batch_size": 32,
+      "call_latency_ms": {
+        "50": 1.65225,
+        "95": 3.530325,
+        "99": 3.764145
+      },
+      "feature_dimension": 934,
+      "max_abs_probability_error": 1.8881769803247295e-07,
+      "mean_abs_probability_error": 1.389113397056288e-08,
+      "model_sha256": "9833992ebe8f7979f9415cf13d34389d4bf1858b6f8abe4658a34dcdc416a9f8",
+      "passed": true,
+      "split_thresholds": 81,
+      "timing_scope": "JSON model parse + feature parse + Rust batch scoring + return decode; excludes Python feature construction",
+      "tolerance": 1e-05,
+      "vectors": 499
+    }
+  },
+  "schema_version": 1,
+  "seed": 44128,
+  "extension_sha256": null,
+  "extension_hash_note": "Original uncached-only DLL was rebuilt before digest was recorded; original measurements retained, see cached report for verified current binary"
+}

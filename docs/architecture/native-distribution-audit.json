@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "artifacts": [
+    {
+      "name": "reflexmesh-0.1.0-cp311-cp311-win_amd64.whl",
+      "sha256": "04e5954737422fe4a6c88a2bb418998589b0027ba5814275bb555f1a746294a4",
+      "bytes": 581386
+    },
+    {
+      "name": "reflexmesh-0.1.0-cp312-cp312-win_amd64.whl",
+      "sha256": "1d70fe29e83f9cae1898ee68634626c8551fa55ffb6ca2864ac0a315d1023c87",
+      "bytes": 581391
+    },
+    {
+      "name": "reflexmesh-0.1.0.tar.gz",
+      "sha256": "8406a82d89f5c8d4677443766d6403bec1d93a341f06826bcb8b6417bc85bed0",
+      "bytes": 156992
+    }
+  ],
+  "wheel_metadata": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: false\nTag: cp312-cp312-win_amd64\n\n",
+  "native_extension": "reflexmesh/_native.cp312-win_amd64.pyd",
+  "native_sha256": "f1ed93084ccb5081e247bb14952d17a7ab3c162a8f940c993bd96aa84be1880c",
+  "embedded_native_source_sha256": {
+    "Cargo.lock": "c89ad9b6caa248761e85f839a9bde73e468627902e96442d36a8bbaad5e88f28",
+    "Cargo.toml": "f4933884f721b09aee153d70872fb44488af4f3986a5a6e802fc51481c5641ab",
+    "rust/contracts.rs": "80faa2ad867c4bdda2fca98d3c068c577217fa29465235187063c1f22b423dc9",
+    "rust/core.rs": "9ebf227d2e152c59dd0fdf613f954051ef0d5b60c11328b042fa41fa48b22fbf",
+    "rust/lib.rs": "f84d221f521c35905377dcc4522111206ab27d564059845983a28f791acc7cfe",
+    "rust/policy.rs": "964cd3c64e97ea3fa9719dde0aa495136943d33b85d74eb2f95af0aea724c67b",
+    "rust/tests.rs": "e5fe531edeb55fb0cb662f91645f5dbab07b87602916b3d12f931896366e4820"
+  },
+  "all_packaged_python_matches_workspace": [
+    "reflexmesh/__init__.py",
+    "reflexmesh/artifacts.py",
+    "reflexmesh/cli.py",
+    "reflexmesh/contracts.py",
+    "reflexmesh/controller.py",
+    "reflexmesh/effectors.py",
+    "reflexmesh/features.py",
+    "reflexmesh/mcp.py",
+    "reflexmesh/pipeline.py",
+    "reflexmesh/planners.py",
+    "reflexmesh/processes.py",
+    "reflexmesh/runtime.py",
+    "reflexmesh/server.py",
+    "reflexmesh/workflows.py",
+    "reflexmesh/workspace_service.py",
+    "reflexmesh/benchmarks/__init__.py",
+    "reflexmesh/benchmarks/common.py",
+    "reflexmesh/benchmarks/native_parity.py",
+    "reflexmesh/benchmarks/package_audit.py",
+    "reflexmesh/benchmarks/release_assets.py",
+    "reflexmesh/benchmarks/sources.py",
+    "reflexmesh/benchmarks/summarize.py",
+    "reflexmesh/benchmarks/tau2.py",
+    "reflexmesh/benchmarks/toolsandbox.py",
+    "reflexmesh/environments/__init__.py",
+    "reflexmesh/environments/crash.py",
+    "reflexmesh/environments/faults.py",
+    "reflexmesh/environments/gym.py",
+    "reflexmesh/environments/software.py",
+    "reflexmesh/environments/structural.py",
+    "reflexmesh/evaluation/__init__.py",
+    "reflexmesh/evaluation/runner.py",
+    "reflexmesh/learning/__init__.py",
+    "reflexmesh/learning/dataset.py",
+    "reflexmesh/learning/provenance.py",
+    "reflexmesh/learning/routing.py",
+    "reflexmesh/learning/train.py",
+    "reflexmesh/policies/__init__.py",
+    "reflexmesh/policies/classical.py",
+    "reflexmesh/policies/control.py",
+    "reflexmesh/policies/planning.py",
+    "reflexmesh/policies/recurrent.py",
+    "reflexmesh/policies/rl.py",
+    "reflexmesh/policies/rules.py"
+  ],
+  "raw_benchmarks_or_artifacts_bundled": false,
+  "twine_check": "passed",
+  "installed_eval_suite": {
+    "passed": 297,
+    "failed": 0,
+    "warnings": 2
+  },
+  "publication": "not performed by audit",
+  "sdist_native_sources_and_notices_present": true,
+  "outside_working_directory_lineage_verified": true,
+  "installed_package": ".venv-eval/Lib/site-packages/reflexmesh"
+}

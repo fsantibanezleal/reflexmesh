@@ -1,0 +1,23 @@
+{
+  "verification_phase": "post-run source audit; future adapter runs also validate before acting",
+  "sources": [
+    {
+      "source": "toolsandbox",
+      "revision": "c8571d7854316d2e1c5f288e59fe1e34e53f6dd1",
+      "archive_sha256": "99a7806104c1e3cbcf9d8d1c790bb5bcde96ca06785626cb8e1f6beb9c3ee241",
+      "original_files_checked": 77,
+      "original_bytes_checked": 1340475,
+      "tree_manifest_sha256": "eaeada9caec7b6b0dc8a96626aa12ede7152a8e9fa3add265e422b33eac0d8c9",
+      "all_original_files_match_archive": true
+    },
+    {
+      "source": "tau2",
+      "revision": "5ba9e3e56db57c5e4114bf7f901291f09b2c5619",
+      "archive_sha256": "7e6ba284c65613ce9b02ada0ff017845e0b96cf53a0fe4fff338a1d5a563f389",
+      "original_files_checked": 200,
+      "original_bytes_checked": 632593994,
+      "tree_manifest_sha256": "c8efbb95372de1d303cd422ea8dbb80b977f5c5192c324bf06a883c9b31d1508",
+      "all_original_files_match_archive": true
+    }
+  ]
+}

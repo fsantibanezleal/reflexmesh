@@ -1,0 +1,23 @@
+[package]
+name = "reflexmesh-native"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "Apache-2.0"
+description = "Authoritative event and execution admission broker for reflexmesh"
+
+[lib]
+name = "_native"
+path = "rust/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+pyo3 = { version = "=0.27.2", features = ["abi3-py311"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+
