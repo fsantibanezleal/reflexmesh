@@ -1,0 +1,68 @@
+{
+  "verified_at": "2026-09-24T02:01:38.298052+00:00",
+  "version": "0.1.0",
+  "release_tag": "v0.01.000",
+  "release_commit": "02af858fb4ed4a9cf59357f78876db4027849bf8",
+  "workflow": "https://github.com/fsantibanezleal/reflexmesh/actions/runs/35944473929",
+  "workflow_result": "success",
+  "clean_install": "public PyPI, binary-only, no cache, fresh venv, source imports isolated",
+  "installed_native_sha256": "fcfaba931fc0ed2d2f88883e16572c91f13079158c909d718c1c0f8e83061fd8",
+  "actual_file_workflow": "verified file contents and native completed receipt",
+  "models_download": {
+    "files": 18,
+    "all_hashes_verified": true,
+    "archive_sha256": "ebc90cd6cb1b01b0f8bfacbdef5a86305e460d3140ec6cf3711176115cbb1504"
+  },
+  "distributions": [
+    {
+      "filename": "reflexmesh-0.1.0-cp311-cp311-macosx_11_0_arm64.whl",
+      "sha256": "0658b06c01fb37af57a1c9048a6a7f5342bd39e6d1004e5cf12c329d0196ee1d",
+      "uploaded": "2026-09-24T01:51:32.535662Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp311-cp311-manylinux_2_28_x86_64.whl",
+      "sha256": "12ae4256126ca9d0e6a088415e9a402180678081507cdd3a2d1df84dcd416893",
+      "uploaded": "2026-09-24T01:51:34.514403Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp311-cp311-win_amd64.whl",
+      "sha256": "70689fbfd54c14c1eb22927702ced354404288bf71df1b3c877d89b5dbe2cd75",
+      "uploaded": "2026-09-24T01:51:35.903007Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp312-cp312-macosx_11_0_arm64.whl",
+      "sha256": "ca4352ac284860577e5da3992debb2397c55e320824921eef2d445dbd44b437e",
+      "uploaded": "2026-09-24T01:51:37.499202Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+      "sha256": "cf6bc0a0566ee3f4d9c4034716706d5f14cd7cf3ead6f0e1078552d5b72d0842",
+      "uploaded": "2026-09-24T01:51:39.353521Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp312-cp312-win_amd64.whl",
+      "sha256": "a31015af7540902b87c50800a7d0108d88c729789801698eda2abbad7225119c",
+      "uploaded": "2026-09-24T01:51:40.804754Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp313-cp313-macosx_11_0_arm64.whl",
+      "sha256": "70c6c9972f29fcd1ce4fa149a23bed299c3ce4336135f9cb4d536b0805119081",
+      "uploaded": "2026-09-24T01:51:42.078972Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp313-cp313-manylinux_2_28_x86_64.whl",
+      "sha256": "dbe51dcf2bd15b25741fd847f916934550dc741e396e5154ef4236ffd0088480",
+      "uploaded": "2026-09-24T01:51:43.731392Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0-cp313-cp313-win_amd64.whl",
+      "sha256": "0a51b48d364a2d616099bea34dd247fd50897c33b08403159baabfa3f45fd1c2",
+      "uploaded": "2026-09-24T01:51:45.411283Z"
+    },
+    {
+      "filename": "reflexmesh-0.1.0.tar.gz",
+      "sha256": "2964c5cd92df0b66613cc11530d1a3dfa8e97fd4bd0aa43b5303bfe0dc744049",
+      "uploaded": "2026-09-24T01:51:46.990571Z"
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 2. Execute the named contract gates before release.
 3. Check persisted artifacts and user-visible behavior, then record external release gates separately.
 
-19,488 episodes passed the independent identity/hash audit on September 23. Native parity passed 484 vectors per exported model at 1e-5. PyPI publication remains pending account authentication; no successful index publication is claimed.
+19,488 episodes passed the independent identity/hash audit on September 23. Native parity passed 484 vectors per exported model at 1e-5. PyPI publication succeeded through Trusted Publishing in workflow 35944473929: nine portable wheels and one source distribution. A fresh isolated, uncached PyPI installation executed and verified a real file workflow; all 18 downloaded model files passed their release hashes. See docs/evaluation/release-validation.json.
 
 | Requirement | Gate | Current verdict |
 | --- | --- | --- |

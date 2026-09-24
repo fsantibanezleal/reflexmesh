@@ -10,16 +10,20 @@ The controller maintains exact capabilities and resource versions separately fro
 
 ## Install and execute
 
+The published base runtime installs with `python -m pip install reflexmesh==0.1.0`. Add `[train,server,mcp]` for the complete learned-policy workbench and MCP integration. [Release verification](docs/evaluation/release-validation.json) records the public distributions, clean installation and actual file execution. [Corrected results](docs/evaluation/corrected-results.md) report the full experiment, including the negative learned-advantage findings.
+
 Python 3.11+ is required. Source builds require Rust and platform C/C++ build tools. Training and the local workbench server are optional dependencies.
 
 ```sh
-python -m pip install '.[train,server,dev]'
+python -m pip install 'reflexmesh[train,server,mcp]==0.1.0'
 reflexmesh doctor
 mkdir workspace
 reflexmesh workflow examples/verified-workflow.json --workspace workspace
 ```
 
 The example performs a real file write and checks its SHA-256 postcondition through the native broker. It does not call an LLM. Use the Runtime SDK to register files, fixed process templates, explicit HTTP endpoints and application-specific tools. Use Controller to submit dependent goals, subscribe to events and coordinate a slow planner.
+
+The JSON example is in this repository's `examples/` directory. From a source checkout, development installation remains `python -m pip install '.[train,server,mcp,dev]'`.
 
 ```python
 from pathlib import Path
