@@ -1,0 +1,531 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-09-20T22:47:17.731171+00:00",
+  "capture_timing": "after fitting, before held-out evaluation",
+  "python": "3.12.10",
+  "packages": {
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.1",
+    "xgboost": "3.4.1",
+    "torch": "2.14.0",
+    "sb3-contrib": "2.9.0",
+    "onnxruntime": "1.30.0"
+  },
+  "artifact_sha256": {
+    "data/calibration.episodes.jsonl.gz": "9fbc017f10b88c1201850be5f16e097802d403e32e77cb7c934099c3bbf3e4ca",
+    "data/calibration.manifest.json": "3d2a1980a257b3075f3b2a9040b6206c5b92e76317bc15a5fe5afc882d197fb9",
+    "data/router-calibration.jsonl": "7a54ee04083944b14f2f0ed5f3dcc9024c376c30bffad6d3072b4d65df9cbdf2",
+    "data/router-fit.jsonl": "c394d60131d1545f702fd37ad48901469b6d357116f2fc0aaea0a0b715568f45",
+    "data/router-selection.jsonl": "00d320378579dff2a0790c1eeee95c7a1f00efa0ed58ef052e47a37ad0dc7073",
+    "data/train.episodes.jsonl.gz": "06a2a91ac2d76abb316593254dbe0f33c3eff07af88727099ce186936e780aa6",
+    "data/train.manifest.json": "95e800591adb90dd40ae94150fffe990297dad5493c15ebd97cbaf496b45f6e2",
+    "data/validation.episodes.jsonl.gz": "e5cb64a749bd50e3351479842f835c98fc792e260140806a6af4d9bc0d665e87",
+    "data/validation.manifest.json": "5b027da7d76410567fc9ce1a7ebb4de4c04860a448c640be96c962ca5ca43ecc",
+    "checkpoints/classical-training.json": "b6b0f281dfaa0371f3956a2472ae7ec7ac5e68d93a57569f45d70e8c5495e257",
+    "checkpoints/M03.joblib": "1dd2a1bbad49fb0c1bcc5f28a92b188e527a20878bca07df5b5551e982e2a2e3",
+    "checkpoints/M03.linear.json": "6484fce0702bcd44e0feadcdb7fcbcec048583be6e67b5c84ee16b03dfed930f",
+    "checkpoints/M04.joblib": "284b0542c03482184a7d2c0cdf6bd0243301680903383704fa48b93d9a222fd6",
+    "checkpoints/M04.trees.json": "9833992ebe8f7979f9415cf13d34389d4bf1858b6f8abe4658a34dcdc416a9f8",
+    "checkpoints/M04.xgboost.json": "72ada927336b1c02691af10ed06c1e434afd5bfe3a251b56f126771e29ad11c7",
+    "checkpoints/M05.metadata.json": "2cfdd94206e1cb9bf12177b2628bff119af084c1971de1af1add467e51b8a184",
+    "checkpoints/M05.onnx": "91156aa342f878f588705b94de273e44894fd741faf4118b2d4a2bd6cd751b08",
+    "checkpoints/M05.pt": "db51aa7229463ead2511b77f4df14ff27c59097982fddb70fdece64bca89332a",
+    "checkpoints/M06.npz": "65380ef9b2e5f1c7b2af261456afbcafbc85957117aa3c56c16a47388ed783dc",
+    "checkpoints/M07.zip": "21cd80b562bff6c95816367beda974b607287bb6de3a023a3c9e924606df995d",
+    "checkpoints/M08.pt": "6de4d1d1a8b121fbaef1d2bb975601257c7e50f419f04e81e319c4efe8f00249",
+    "checkpoints/M11.gate.joblib": "53f475ea60bc841bf5eb47da7cb709b33e2815f44e27b64f67c3bf42d6078c76",
+    "checkpoints/M12.gate.joblib": "883f82288c8562888a5fe31f14be6a351f6e30e81798089b73f13bdb723982ef",
+    "checkpoints/ppo-training.json": "c94d73a0efeb16dadc95ee1f72081770e4978d45cf277c631710b409defa1cf2",
+    "checkpoints/recurrent-training.json": "a45810a1d853a541e6d50084916c9c0d51ed1851caee955d69e744c848ae66ed",
+    "checkpoints/routing-training.json": "267431b2bc6cded7adfe10bcd9f3eb9f0805f2038b0239df00dcd24e10f228cf",
+    "checkpoints/transition-training.json": "40203d89d164a01db619da024120d59c90290604f7d6e051605291d2546b9ae8"
+  },
+  "base_training_episodes": 600,
+  "base_validation_episodes": 120,
+  "base_calibration_episodes": 120,
+  "routing_states_per_group": 228,
+  "routing_group_seeds": [
+    50000,
+    60000,
+    70000
+  ],
+  "ppo_actual_transitions": 16384,
+  "training_device": "CPU",
+  "planner": "actual local Ollama qwen3.5:4b",
+  "limitations": [
+    "Exact source snapshots were not captured at fitting job launch. Final evaluation captures exact installed Python, native source manifest, binary and checkpoint hashes.",
+    "Initial data collection and running fitting jobs used earlier C06 wrapper receipt status; actual remote POST and GET truth were recorded. Final runtime retains native unknown lease until actual verification.",
+    "Formatting, lazy imports, bounded inference-thread setup, process-tree handling and reporting labels were finalized after original deterministic fitting; no model tuning used held-out outcomes."
+  ],
+  "failed_attempts": "failed-attempts/process-tree-before-fix: retained partial logs, not included as completed fitting runs",
+  "documentation_extended_at": "2026-09-20T22:57:42.973670+00:00",
+  "evidence_classes": {
+    "captured_by_fit": "A completed fitting job wrote this value into its report or checkpoint.",
+    "inspected_after_fit": "Read from the existing checkpoint or dataset after fitting; hashes bind the inspected artifacts.",
+    "reconstructed_from_source": "Configuration reconstructed from the final source; exact fitting source was not snapshotted at job launch.",
+    "environment_after_fit": "Installed environment observed after fitting, not an independently captured historical lock."
+  },
+  "environment_after_fit": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "xgboost": "3.4.1",
+      "torch": "2.14.0",
+      "stable-baselines3": "2.9.0",
+      "sb3-contrib": "2.9.0",
+      "gymnasium": "1.3.0",
+      "onnx": "1.23.0",
+      "onnxruntime": "1.30.0",
+      "joblib": "1.6.0",
+      "cloudpickle": "3.1.2"
+    }
+  },
+  "datasets": {
+    "train": {
+      "evidence": "inspected_after_fit",
+      "episodes": 600,
+      "transitions": 1882,
+      "verified_successes": 593,
+      "exploration": 0.15,
+      "environment_seeds": [
+        10000,
+        10001,
+        10002,
+        10003,
+        10004
+      ],
+      "generalization_scope": "held-out environment instances; owned templates shared across splits",
+      "label_target": "demonstration preference; execution outcomes separately recorded",
+      "sha256": "06a2a91ac2d76abb316593254dbe0f33c3eff07af88727099ce186936e780aa6",
+      "manifest": "data/train.manifest.json",
+      "groups": 5
+    },
+    "validation": {
+      "evidence": "inspected_after_fit",
+      "episodes": 120,
+      "transitions": 314,
+      "verified_successes": 120,
+      "exploration": 0.15,
+      "environment_seeds": [
+        20000
+      ],
+      "generalization_scope": "held-out environment instances; owned templates shared across splits",
+      "label_target": "demonstration preference; execution outcomes separately recorded",
+      "sha256": "e5cb64a749bd50e3351479842f835c98fc792e260140806a6af4d9bc0d665e87",
+      "manifest": "data/validation.manifest.json",
+      "groups": 1
+    },
+    "calibration": {
+      "evidence": "inspected_after_fit",
+      "episodes": 120,
+      "transitions": 314,
+      "verified_successes": 120,
+      "exploration": 0.0,
+      "environment_seeds": [
+        30000
+      ],
+      "generalization_scope": "held-out environment instances; owned templates shared across splits",
+      "label_target": "demonstration preference; execution outcomes separately recorded",
+      "sha256": "9fbc017f10b88c1201850be5f16e097802d403e32e77cb7c934099c3bbf3e4ca",
+      "manifest": "data/calibration.manifest.json",
+      "groups": 1
+    }
+  },
+  "methods": {
+    "M03": {
+      "captured_parameters": {
+        "C": 5,
+        "class_weight": null,
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 600,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": 17,
+        "solver": "liblinear",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "calibrator_parameters": {
+        "C": 10,
+        "class_weight": null,
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 300,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": null,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "evidence": "inspected_after_fit",
+      "fit_data": "train",
+      "probability_calibration_data": "calibration",
+      "target": "candidate demonstration preference, not action safety",
+      "report": "checkpoints/classical-training.json",
+      "device": "CPU"
+    },
+    "M04": {
+      "captured_parameters": {
+        "objective": "binary:logistic",
+        "base_score": null,
+        "booster": null,
+        "callbacks": null,
+        "colsample_bylevel": null,
+        "colsample_bynode": null,
+        "colsample_bytree": null,
+        "device": null,
+        "early_stopping_rounds": null,
+        "enable_categorical": true,
+        "eval_metric": null,
+        "feature_types": null,
+        "feature_weights": null,
+        "gamma": null,
+        "grow_policy": null,
+        "importance_type": null,
+        "interaction_constraints": null,
+        "learning_rate": 0.08,
+        "max_bin": null,
+        "max_cat_threshold": null,
+        "max_cat_to_onehot": null,
+        "max_delta_step": null,
+        "max_depth": 5,
+        "max_leaves": null,
+        "min_child_weight": null,
+        "missing": {
+          "parameter_sentinel": "nan"
+        },
+        "monotone_constraints": null,
+        "multi_strategy": null,
+        "n_estimators": 160,
+        "n_jobs": 2,
+        "num_parallel_tree": null,
+        "random_state": 17,
+        "reg_alpha": null,
+        "reg_lambda": null,
+        "sampling_method": null,
+        "scale_pos_weight": null,
+        "subsample": null,
+        "tree_method": "hist",
+        "validate_parameters": null,
+        "verbosity": null
+      },
+      "calibrator_parameters": {
+        "C": 10,
+        "class_weight": null,
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 300,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": null,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "evidence": "inspected_after_fit",
+      "fit_data": "train",
+      "probability_calibration_data": "calibration",
+      "target": "candidate demonstration preference, not action safety",
+      "report": "checkpoints/classical-training.json",
+      "device": "CPU"
+    },
+    "M05": {
+      "captured_by_fit": {
+        "epochs": 25,
+        "seed": 17,
+        "device": "cpu",
+        "training_seconds": 6.645168700022623,
+        "temperature": 0.1353352832366127,
+        "hidden_size": 32,
+        "onnx_max_abs_error": 4.76837158203125e-06
+      },
+      "reconstructed_from_source": {
+        "architecture": "state27->GRU32; candidate934->tanh48; concatenation80->tanh48->1",
+        "optimizer": "Adam",
+        "learning_rate": 0.003,
+        "sequence_batch_size": 32,
+        "gradient_norm_cap": 1.0,
+        "loss": "masked candidate cross entropy, causal episode unrolling",
+        "temperature_grid": {
+          "expression": "exp(linspace(-2,2,41))",
+          "selection": "minimum calibration negative log likelihood"
+        }
+      },
+      "fit_data": "train",
+      "probability_calibration_data": "calibration",
+      "device": "CPU"
+    },
+    "M06": {
+      "captured_by_fit": {
+        "updates": 1882,
+        "target": "observed one-step reward of actually executed action"
+      },
+      "reconstructed_from_source": {
+        "projection": "Rademacher934x64/sqrt(64)",
+        "seed": 17,
+        "alpha": 0.2,
+        "initial_inverse_covariance": "identity64",
+        "initial_reward_vector": "zeros64",
+        "update": "Sherman-Morrison",
+        "evaluation_updates": false
+      },
+      "fit_data": "train",
+      "device": "CPU",
+      "limitation": "myopic reward model; no unsupported off-policy evaluation claim"
+    },
+    "M07": {
+      "captured_parameters": {
+        "seed": 29,
+        "num_timesteps": 16384,
+        "n_envs": 1,
+        "n_steps": 256,
+        "batch_size": 64,
+        "n_epochs": 5,
+        "learning_rate": 0.0005,
+        "gamma": 0.95,
+        "gae_lambda": 0.95,
+        "clip_range_vf": null,
+        "normalize_advantage": true,
+        "ent_coef": 0.0,
+        "vf_coef": 0.5,
+        "max_grad_norm": 0.5,
+        "target_kl": null,
+        "policy_kwargs": {
+          "net_arch": {
+            "pi": [
+              64,
+              32
+            ],
+            "vf": [
+              64,
+              32
+            ]
+          }
+        },
+        "clip_range": "ConstantSchedule(val=0.2)"
+      },
+      "captured_environment": "- OS: Windows-11-10.0.26200-SP0 10.0.26200\n- Python: 3.12.10\n- Stable-Baselines3: 2.9.0\n- PyTorch: 2.14.0+cpu\n- GPU Enabled: False\n- Numpy: 2.5.3\n- Cloudpickle: 3.1.2\n- Gymnasium: 1.3.0\n",
+      "evidence": "inspected_after_fit: checkpoint contains these parameters and fitting environment",
+      "report": "checkpoints/ppo-training.json",
+      "reconstructed_from_source": {
+        "algorithm": "sb3-contrib MaskablePPO",
+        "optimizer": "Adam via MlpPolicy defaults",
+        "environment_templates": "20 families x six variants, seed10000; reset samples a spec with seeded Gym RNG",
+        "features": "seven padded934-dimensional candidate rows, sorted action IDs",
+        "recurrent": false
+      },
+      "fit_data": "online actual native-broker disposable environments, not offline train JSONL",
+      "device": "CPU"
+    },
+    "M08": {
+      "captured_by_fit": {
+        "epochs": 40,
+        "device": "cpu",
+        "validation_mse": 0.0007119610672816634,
+        "validation_state_mse": {
+          "stale": 7.910100976005197e-06,
+          "duplicate": 1.4759118130314164e-05,
+          "dependency_missing": 1.0468542313901708e-05,
+          "uncertain": 0.00014347014075610787,
+          "cancel_requested": 0.0001355447166133672,
+          "running": 0.0005075320368632674,
+          "failed": 0.0037306516896933317,
+          "write_unknown": 6.473640678450465e-05,
+          "confirmed": 0.00022455008001998067,
+          "pressure": 6.287479482125491e-05,
+          "job_ready": 0.0001880473137134686,
+          "needs_validation": 9.33653864194639e-05,
+          "valid": 0.004127575550228357,
+          "source_exists": 0.0002503467840142548,
+          "destination_exists": 8.442841499345377e-05,
+          "index_stale": 5.52179008082021e-05,
+          "config_missing": 0.00011999865819234401,
+          "test_passed": 5.200884334044531e-05,
+          "input_ready": 0.00021102528262417763,
+          "transformed": 0.00033001136034727097,
+          "result_ready": 7.388701487798244e-05,
+          "conflict": 0.00017329948605038226,
+          "recovered": 8.212155080400407e-05,
+          "drift": 0.00014498633390758187,
+          "attempts": 0.0009728015284053981,
+          "progress": 0.00044851365964859724,
+          "last_action_failed": 0.002478549722582102
+        },
+        "validation_reward_mse": 0.0029233924578875303,
+        "validation_terminal_mse": 0.002934796502813697,
+        "last_head_target": "observed episode termination; not success probability"
+      },
+      "reconstructed_from_source": {
+        "seed": 31,
+        "architecture": "934->ReLU64->ReLU48->29",
+        "optimizer": "Adam",
+        "learning_rate": 0.003,
+        "batch_size": 128,
+        "loss": "mean squared error; equal target-coordinate weights",
+        "targets": "27 observed next-state coordinates, reward, observed termination",
+        "planning_horizon": 2,
+        "maximum_second_level_expansions": 24,
+        "planning_discount": 0.8
+      },
+      "fit_data": "train",
+      "error_report_data": "validation",
+      "device": "CPU"
+    },
+    "M11": {
+      "captured_by_fit": {
+        "kind": "empirical_constant_gate_no_positive_or_negative_examples",
+        "fit_states": 228,
+        "positive_fit_states": 0,
+        "calibration_states": 228,
+        "positive_calibration_states": 2,
+        "threshold": 1.01,
+        "calibration_net_incremental_utility": 0.0,
+        "calibration": {
+          "n": 228,
+          "target": "positive_incremental_utility",
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 228,
+              "confidence": 0.008851282395878433,
+              "accuracy": 0.0043859649122807015
+            }
+          ],
+          "brier": 0.0043866672842982676,
+          "log_loss": 0.02958499576018007
+        },
+        "planner_model": "qwen3.5:4b",
+        "target": "positive executed one-decision incremental utility including measured planner cost",
+        "scope": "resettable owned environments; shared teacher continuation; not whole-policy causal effect",
+        "fit_seed": 50000,
+        "calibration_seed": 60000,
+        "threshold_selection_seed": 70000,
+        "probability_calibration": "Platt fit on60000; empirical constant if one class; reliability on70000; no safety bound",
+        "expected_gain_model": "Ridge on actual paired incremental utility including measured local planner cost",
+        "fast_action": "actual M03 action"
+      },
+      "reconstructed_from_source": {
+        "classifier": "DummyClassifier(prior) because all fit gains were nonpositive; LogisticRegression(C1,liblinear,max_iter500) only if both classes",
+        "probability_calibrator": "LogisticRegression(C1,liblinear) on disjoint seed60000",
+        "gain_regression": "Ridge(alpha1)",
+        "threshold_grid": "linspace(0,1,21) plus1.01; largest threshold wins exact ties",
+        "paired_utility": "verified_success + first_action_reward -0.005*executed_steps",
+        "incremental_target": "slow_utility - fast_utility -0.005*measured_planner_seconds",
+        "shared_continuation": "bounded M01 teacher after selected first action"
+      },
+      "fit_data": "data/router-fit.jsonl",
+      "probability_calibration_data": "data/router-calibration.jsonl",
+      "threshold_selection_data": "data/router-selection.jsonl",
+      "device": "CPU for fitted gate; actual local Ollama for planner labels"
+    },
+    "M12": {
+      "captured_by_fit": {
+        "kind": "empirical_constant_gate_no_positive_or_negative_examples",
+        "fit_states": 228,
+        "positive_fit_states": 0,
+        "calibration_states": 228,
+        "positive_calibration_states": 2,
+        "threshold": 1.01,
+        "calibration_net_incremental_utility": 0.0,
+        "calibration": {
+          "n": 228,
+          "target": "positive_incremental_utility",
+          "bins": [
+            {
+              "lower": 0.0,
+              "upper": 0.1,
+              "count": 228,
+              "confidence": 0.008851282395878433,
+              "accuracy": 0.0043859649122807015
+            }
+          ],
+          "brier": 0.0043866672842982676,
+          "log_loss": 0.02958499576018007
+        },
+        "planner_model": "qwen3.5:4b",
+        "target": "positive executed one-decision incremental utility including measured planner cost",
+        "scope": "resettable owned environments; shared teacher continuation; not whole-policy causal effect",
+        "fit_seed": 50000,
+        "calibration_seed": 60000,
+        "threshold_selection_seed": 70000,
+        "probability_calibration": "Platt fit on60000; empirical constant if one class; reliability on70000; no safety bound",
+        "expected_gain_model": "Ridge on actual paired incremental utility including measured local planner cost",
+        "fast_action": "actual recurrent/effect blended action"
+      },
+      "reconstructed_from_source": {
+        "classifier": "DummyClassifier(prior) because all fit gains were nonpositive; LogisticRegression(C1,liblinear,max_iter500) only if both classes",
+        "probability_calibrator": "LogisticRegression(C1,liblinear) on disjoint seed60000",
+        "gain_regression": "Ridge(alpha1)",
+        "threshold_grid": "linspace(0,1,21) plus1.01; largest threshold wins exact ties",
+        "paired_utility": "verified_success + first_action_reward -0.005*executed_steps",
+        "incremental_target": "slow_utility - fast_utility -0.005*measured_planner_seconds",
+        "shared_continuation": "bounded M01 teacher after selected first action"
+      },
+      "fit_data": "data/router-fit.jsonl",
+      "probability_calibration_data": "data/router-calibration.jsonl",
+      "threshold_selection_data": "data/router-selection.jsonl",
+      "device": "CPU for fitted gate; actual local Ollama for planner labels"
+    }
+  },
+  "nonfitted_methods": {
+    "M01": "explicit rules",
+    "M02": "declarative reactive behavior tree",
+    "M09": "external pretrained qwen3.5:4b; no local weight fine-tuning",
+    "M10": "M01 plus the same external pretrained planner"
+  },
+  "held_out": {
+    "core": {
+      "seeds": [
+        40000,
+        40001,
+        40002,
+        40003,
+        40004,
+        40005,
+        40006,
+        40007,
+        40008,
+        40009
+      ],
+      "families": 20,
+      "variants": 6,
+      "episodes_per_method": 1200
+    },
+    "structural_transfer": {
+      "seeds": [
+        81000,
+        81001,
+        81002
+      ],
+      "families": 4,
+      "variants": [
+        "nominal",
+        "boundary"
+      ],
+      "episodes_per_method": 24
+    },
+    "model_selection_on_these_outcomes": false
+  },
+  "configuration_source_sha256_at_documentation_time": {
+    "python/reflexmesh/learning/train.py": "054b73a77ec06cac2bf37bf620d9e9a3821eeb362e604b93d8ac518a867cdc10",
+    "python/reflexmesh/learning/routing.py": "081a8bd14e03495182004a37b7cff58eeea74b0681cc0f89ea5ad9c279f89cc2",
+    "python/reflexmesh/policies/rl.py": "68015b3bb2c76dd589230e2e48b62b1bfb29be4f6ea02f70ef176ad2f57dd153",
+    "python/reflexmesh/environments/gym.py": "d2706cfb9773c07464c8acd5bdc72c0236fc53b01e5c92bbb2f5ccfdb986c3e6"
+  },
+  "configuration_hash_warning": "These are final documentation-time source hashes, not a retroactive claim about exact fitting source. Evaluation lineage independently freezes installed code and binary."
+}
