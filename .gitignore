@@ -29,3 +29,6 @@ artifacts/structural-transfer/
 artifacts/failed-attempts/
 artifacts/releases/
 artifacts/superseded/
+
+# run logs of the training and evaluation commands (the provenance record is tracked; the logs are not)
+artifacts/logs/
