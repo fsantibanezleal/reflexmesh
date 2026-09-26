@@ -28,3 +28,5 @@ jobs:
       - run: python -m pip install '.[dev]'
       - name: Library runtime contracts without training dependencies
         run: python -m pytest tests/test_native_broker.py tests/test_runtime.py tests/test_planners.py tests/test_controller.py tests/test_processes.py
+      - name: No em-dash and no emoji in tracked content (ADR-0067)
+        run: python scripts/check_content_standards.py
