@@ -21,6 +21,7 @@ class BuildWithNativeLineage(build_py):
         if not hashes or "Cargo.lock" not in hashes:
             raise RuntimeError("native source lineage is incomplete")
         destination = Path(self.build_lib) / "reflexmesh" / "native-source.json"
+        destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(
             json.dumps({"schema_version": 1, "source_sha256": hashes}, indent=2, sort_keys=True),
             encoding="utf-8",
