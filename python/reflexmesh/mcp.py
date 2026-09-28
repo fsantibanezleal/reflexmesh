@@ -293,7 +293,7 @@ class MCPClient:
             **params,
             "_meta": {
                 _PREFIX + "protocolVersion": PROTOCOL_VERSION,
-                _PREFIX + "clientInfo": {"name": "reflexmesh", "version": "0.1.0"},
+                _PREFIX + "clientInfo": {"name": "reflexmesh", "version": "0.1.1"},
                 _PREFIX + "clientCapabilities": {},
             },
         }

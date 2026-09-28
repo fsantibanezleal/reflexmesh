@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.01.001 - 2026-09-28
+
+### Fixed
+
+- Resolve stale, duplicate, and unavailable-dependency observations before urgent cancellation;
+  discard a pending planner result when cancellation preempts it.
+- Require file-operation postconditions to match the operated path and written content.
+
+### Added
+
+- Hash-audited benchmark adequacy report, complete 1,536-episode semantic-transfer stress lane,
+  and a separate fitted initial-arm routing study with explicit negative results and limits.
+
 ## Unreleased
 
 ### Added

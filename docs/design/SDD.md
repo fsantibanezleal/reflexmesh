@@ -1,5 +1,5 @@
 # Reflexmesh software design
-Date: 2026-09-23. Release: 0.1.0.
+Date: 2026-09-23; benchmark extension 2026-09-28. Release: 0.1.0 until the next validated package publication.
 
 ## Review and migration record
 This document consolidates the research-backed architecture and implementation authorized on September 20. ADR-0075 was adopted on September 22, after that implementation and experiment had started. This is an explicit migration, not a retroactive claim that this document was reviewed before development. The user's September 23 instruction authorizes completing the existing scope. New scope requires its own design.
@@ -38,6 +38,8 @@ Each method has 1,200 core and 24 structural episodes. The full comparison and h
 C01-C04 cover files, indexing, validation and build recovery. C05-C08 cover HTTP retry, ambiguous writes, process cancellation and restart. C09-C12 cover bounded storage, DAGs, revision conflict and agent jobs. C13-C16 cover planner deadlines, invalid arguments, untrusted text and missing evidence. C17-C20 cover new capabilities, event ordering, reliability drift and actual crash recovery.
 Twenty families x six variants x ten held-out seeds x twelve methods = 14,400 core episodes. Four unseen structural compositions x two variants x three seeds x twelve methods = 288 transfer episodes. Four M12 ablations each repeat all 1,200 core cells. Template overlap across train/test is explicit; structural transfer is reported separately.
 
+A post-hoc audit exposes the core state-machine ceiling, seed-invariant outcomes and concentrated C07 failures without altering the frozen 19,488 episodes. A distinct semantic-transfer suite gives all twelve frozen methods eight new real-file compositions, two variants and eight seeds. Its 1,536 outcomes, hashes and lineage are audited separately, and no result from it is pooled into the corrected core.
+
 ## Oracle
 Truth is verified by actual files, hashes, HTTP service state, child-process termination and external crash/reopen observations. Success requires independent postconditions. Teacher agreement is an imitation metric, never a safety oracle. Native receipt rejection measures declared-contract enforcement, not absence of all possible harm.
 Paired comparisons match exact identities and bootstrap over environment seed groups. Timing budgets are not equalized. Ten core groups and three structural seeds limit generalization. A native scorer microbenchmark is not end-to-end latency.
@@ -75,6 +77,12 @@ R-011 WHEN a model bundle is fetched, THE installer SHALL verify its archive and
 Gate: tests/test_model_artifacts.py
 R-012 WHEN CI executes, THE workflows SHALL avoid the training stack and respect the trunk-only budget.
 Gate: scripts/check_ci_budget.py
+R-013 WHEN a new semantic-transfer result is released, THE audit SHALL verify all 1,536 identities, trace hashes, actual execution records and aggregate counts.
+Gate: scripts/audit_semantic_transfer.py
+R-014 WHEN a file workflow declares a postcondition, THE validator SHALL bind it to the operated path and the declared write bytes before dispatch.
+Gate: tests/test_workflows.py::test_file_write_cannot_claim_an_unrelated_existing_postcondition
+R-015 WHEN urgent cancellation encounters stale, duplicate or unavailable observations, THE metacontroller SHALL satisfy required preconditions before cancelling.
+Gate: tests/test_learning_metacontrol.py::test_urgent_cancellation_respects_observation_prerequisites
 ```
 
 Feature requirements, design and convergence are in [features](features/). The evidence report is [corrected evaluation](../evaluation/corrected-results.md).

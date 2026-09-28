@@ -1,0 +1,126 @@
+{
+  "case_variant_method_cells": 1440,
+  "episodes_checked": 14400,
+  "index_sha256": "1024a451fdc1f1aebc4e8d8d66e6bf1aca119f26ae058d3de9b84ff312d8d7a6",
+  "interpretation": "Template-shared seed repetitions are not independent tasks. A perfect exact baseline prevents this matrix from demonstrating a success advantage for learned deferral. Keep this historical result separate from later stress evaluations.",
+  "m12_failures": [
+    {
+      "case_id": "C07",
+      "failures": 10,
+      "variant": "delayed_observation"
+    },
+    {
+      "case_id": "C07",
+      "failures": 10,
+      "variant": "duplicate_event"
+    },
+    {
+      "case_id": "C07",
+      "failures": 10,
+      "variant": "stale_conflict"
+    },
+    {
+      "case_id": "C07",
+      "failures": 10,
+      "variant": "unavailable_dependency"
+    }
+  ],
+  "methods": [
+    {
+      "episodes": 1200,
+      "method_id": "M01",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1200
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M02",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1200
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M03",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1200
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M04",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1200
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M05",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1200
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M06",
+      "seed_invariant_case_variant_cells": 117,
+      "seed_variable_case_variant_cells": 3,
+      "successes": 253
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M07",
+      "seed_invariant_case_variant_cells": 114,
+      "seed_variable_case_variant_cells": 6,
+      "successes": 1170
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M08",
+      "seed_invariant_case_variant_cells": 101,
+      "seed_variable_case_variant_cells": 19,
+      "successes": 664
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M09",
+      "seed_invariant_case_variant_cells": 77,
+      "seed_variable_case_variant_cells": 43,
+      "successes": 595
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M10",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1200
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M11",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1200
+    },
+    {
+      "episodes": 1200,
+      "method_id": "M12",
+      "seed_invariant_case_variant_cells": 120,
+      "seed_variable_case_variant_cells": 0,
+      "successes": 1160
+    }
+  ],
+  "perfect_methods": [
+    "M01",
+    "M02",
+    "M03",
+    "M04",
+    "M05",
+    "M10",
+    "M11"
+  ],
+  "schema_version": 1,
+  "scope": "frozen canonical core; post-hoc discrimination diagnostic",
+  "seed_variable_cells": 71
+}

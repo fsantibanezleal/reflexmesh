@@ -1,0 +1,360 @@
+{
+  "algorithm": "logistic_text_and_fast_score",
+  "calibration_planner_budget": 16,
+  "calibration_positives": 8,
+  "features": "visible initial goal and candidate descriptions plus M04 first-decision scores; no family ID, seed or future outcome",
+  "fit_positives": 19,
+  "held_out_predictions": [
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.19532786276236733,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82000,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.23793676469172095,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82001,
+      "slow_success": 1,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22064777498206717,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82002,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22204743846173133,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82003,
+      "slow_success": 1,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.1953236919131533,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82004,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22139740571630753,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82005,
+      "slow_success": 1,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.21873365973698497,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82006,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22152170948914474,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82007,
+      "slow_success": 1,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.19684918604772336,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82000,
+      "slow_success": 1,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.23962045909903829,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82001,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22230943732523512,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82002,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22345212603273965,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82003,
+      "slow_success": 1,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.19680870250482102,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82004,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22301043180068314,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82005,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22034591739484444,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82006,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22316948869952,
+      "family": "D07",
+      "fast_success": 0,
+      "seed": 82007,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.2177265496291715,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82000,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.2190537913639453,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82001,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.23495376586681094,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82002,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.19518876580657815,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82003,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.2178997289455232,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82004,
+      "slow_success": 1,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.1931235599085968,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82005,
+      "slow_success": 1,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.23344929114769786,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82006,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.19351535277884016,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82007,
+      "slow_success": 0,
+      "variant": "boundary"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.21931986785614557,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82000,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.22069914846591934,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82001,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.23662664996063676,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82002,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.19665014648891296,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82003,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.21952684720577006,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82004,
+      "slow_success": 1,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.1945990232156989,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82005,
+      "slow_success": 0,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.23515301618551976,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82006,
+      "slow_success": 1,
+      "variant": "nominal"
+    },
+    {
+      "delegated": false,
+      "estimated_incremental_success_probability": 0.19501605985806725,
+      "family": "D08",
+      "fast_success": 0,
+      "seed": 82007,
+      "slow_success": 0,
+      "variant": "nominal"
+    }
+  ],
+  "limits": "Post-hoc protocol choice after exploratory smoke; only two held-out task families and recorded arm outcomes. Inference and routing latency are not added to wall time. No causal claim about per-step M12 or general software tasks.",
+  "model_sha256": "c6053db47f6127d7f3dfbd40d1a334d1cd9e8afebaa58f8351ffbca0892a337e",
+  "schema_version": 1,
+  "scope": "initial arm selection only; both arms actually executed before this analysis",
+  "selected_threshold": 0.44629505030857797,
+  "source": {
+    "index_sha256": "05a57e6e4709c0c2e2226ba804e8c8f2fc233580e912e777d578cbc2ea2a44d8"
+  },
+  "split": {
+    "calibration": [
+      "D05",
+      "D06"
+    ],
+    "fit": [
+      "D01",
+      "D02",
+      "D03",
+      "D04"
+    ],
+    "test": [
+      "D07",
+      "D08"
+    ]
+  },
+  "status": "exploratory_offline_paired_selection_not_an_online_M12_result",
+  "test": {
+    "always_fast_M04": {
+      "episodes": 32,
+      "invalid_policy_outputs": 0,
+      "mean_wall_ms": 391.4451124992411,
+      "planner_episodes": 0,
+      "verified_successes": 0
+    },
+    "always_planner_M09": {
+      "episodes": 32,
+      "invalid_policy_outputs": 8,
+      "mean_wall_ms": 20052.693393749905,
+      "planner_episodes": 32,
+      "verified_successes": 10
+    },
+    "hash_half": {
+      "episodes": 32,
+      "invalid_policy_outputs": 4,
+      "mean_wall_ms": 11568.068874998971,
+      "planner_episodes": 19,
+      "verified_successes": 7
+    },
+    "learned_gate": {
+      "episodes": 32,
+      "invalid_policy_outputs": 0,
+      "mean_wall_ms": 391.4451124992411,
+      "planner_episodes": 0,
+      "verified_successes": 0
+    },
+    "post_hoc_oracle_upper_bound": {
+      "episodes": 32,
+      "invalid_policy_outputs": 0,
+      "mean_wall_ms": 4085.057468750165,
+      "planner_episodes": 10,
+      "verified_successes": 10
+    }
+  },
+  "test_positives": 10
+}

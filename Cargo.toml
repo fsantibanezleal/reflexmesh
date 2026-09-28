@@ -1,6 +1,6 @@
 [package]
 name = "reflexmesh-native"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 rust-version = "1.85"
 license = "Apache-2.0"
@@ -20,4 +20,3 @@ sha2 = "0.10"
 [profile.release]
 lto = "thin"
 codegen-units = 1
-

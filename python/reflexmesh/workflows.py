@@ -114,6 +114,14 @@ def validate_recipe(recipe: dict, files: WorkspaceFiles, templates=()) -> list[d
                 "each step requires an independent relative path and SHA256 postcondition"
             )
         files.path(check["path"])
+        if step["tool"] in {"file.read", "file.write"} and files.canonical(
+            args["path"]
+        ) != files.canonical(check["path"]):
+            raise ValueError("file postcondition must verify the operated path")
+        if step["tool"] == "file.write":
+            written_sha256 = hashlib.sha256(args["content"].encode("utf8")).hexdigest()
+            if written_sha256 != check["sha256"]:
+                raise ValueError("file.write postcondition must match its content")
         dependencies = step.setdefault("depends_on", [])
         if (
             not isinstance(dependencies, list)
