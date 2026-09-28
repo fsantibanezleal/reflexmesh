@@ -4,6 +4,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 from reflexmesh.environments import CaseSpec, SoftwareEnvironment
 from reflexmesh.policies.control import LookaheadPolicy, Metacontroller, TransitionNetwork
 from reflexmesh.policies.rules import GuardedFSMPolicy
@@ -115,5 +116,34 @@ def test_same_id_revision_changed_arguments_invalidate_pending_proposal():
             env.step("a-refresh")
             policy.predict(env.observe())
             assert policy.discards[0]["reason"] == "binding_changed"
+    finally:
+        policy.close()
+
+
+@pytest.mark.parametrize(
+    ("variant", "first_operation"),
+    [
+        ("nominal", "cancel"),
+        ("delayed_observation", "refresh"),
+        ("duplicate_event", "ack_event"),
+        ("stale_conflict", "cancel"),
+        ("unavailable_dependency", "wait_dependency"),
+        ("boundary", "cancel"),
+    ],
+)
+def test_urgent_cancellation_respects_observation_prerequisites(variant, first_operation):
+    policy = controller(SlowPlanner(delay=0))
+    try:
+        with SoftwareEnvironment(CaseSpec("C07", variant, 41011)) as environment:
+            actions = []
+            while not environment.terminal:
+                decision = policy.predict(environment.observe())
+                actions.append(decision.candidate_id)
+                environment.step(decision)
+            assert environment.verify()
+            assert actions[0] == "a-" + first_operation
+            assert actions[-1] == "a-cancel"
+            assert len(actions) <= 3
+            assert policy.finish_episode()["planner_calls"] == 0
     finally:
         policy.close()

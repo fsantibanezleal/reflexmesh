@@ -8,6 +8,8 @@
 
 The `file.read` arguments are `{"path":"note.txt"}`. `file.write` accepts `path` and UTF-8 `content`, bounded to 1MiB. Paths are relative to the configured root. Traversal, journal access, symlink/reparse components and hardlinks reject. Subdirectories must already exist. These cooperating tool boundaries do not isolate adversarial code from the operating system.
 
+For a file step, `verify.path` must resolve to the same workspace path as the tool argument. A `file.write` step also requires `verify.sha256` to equal the SHA-256 of its declared UTF-8 content. The service validates this before any step runs, so an existing unrelated file cannot make a write appear complete.
+
 Add `depends_on:["write-note"]` to a later step to require the predecessor's verified success. The controller orders the DAG, runs independent goals through bounded workers and records every native receipt. A failed, cancelled or unresolved predecessor blocks dependents. Deadline cancellation does not claim rollback. Interrupted processes retain unknown effects until reconciliation.
 
 For trusted process jobs, a CLI recipe may include `processes:[{"name":"build","argv":["/absolute/python","build.py"],"timeout_seconds":30}]`. The step selects `process.build` with empty arguments and an independent output-file digest. The argv is immutable after registration; there is no model-generated shell command. A process must be trusted because a child program can itself access resources beyond its working directory. Windows Job Objects own the child tree; POSIX groups cover cooperating descendants. Store app execution aliases are not valid owned process executables; use a direct interpreter image.

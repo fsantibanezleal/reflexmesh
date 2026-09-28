@@ -170,9 +170,10 @@ def run_episode(
         "method_id": policy.policy_id,
         "variant": spec.variant,
         "seed": spec.seed,
-        "lane": "owned-structural-transfer"
-        if spec.split == "structural_transfer"
-        else "owned-real-software",
+        "lane": {
+            "structural_transfer": "owned-structural-transfer",
+            "semantic_transfer": "owned-semantic-transfer",
+        }.get(spec.split, "owned-real-software"),
         "parameters": parameters or {},
         "status": status,
         "events": events,
@@ -404,7 +405,7 @@ def evaluate(
                 {"id": cid, "name": entry[0], "description": entry[2], "variants": list(VARIANTS)}
                 for cid, entry in CASES.items()
             ]
-            if specs[0].split != "structural_transfer"
+            if specs[0].split not in {"structural_transfer", "semantic_transfer"}
             else [
                 {
                     "id": spec.family,
@@ -413,7 +414,8 @@ def evaluate(
                     "variants": ["nominal", "boundary"],
                 }
                 for spec in specs
-                if spec.variant == "nominal" and spec.seed == 81000
+                if spec.variant == "nominal"
+                and spec.seed == (81000 if spec.split == "structural_transfer" else 82000)
             ]
         ),
         "episodes": manifest,
