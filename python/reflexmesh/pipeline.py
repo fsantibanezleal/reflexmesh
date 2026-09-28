@@ -185,7 +185,11 @@ def lineage(checkpoint_dir, specs, planner=None):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "stage", choices=["collect", "train", "ppo", "gates", "evaluate", "ablations", "transfer"]
+        "stage",
+        choices=[
+            "collect", "train", "ppo", "gates", "evaluate", "ablations", "transfer",
+            "semantic-transfer",
+        ],
     )
     parser.add_argument("--artifacts", type=Path, default=Path("artifacts"))
     parser.add_argument("--methods", nargs="+", default=list(METHODS))
@@ -293,6 +297,11 @@ def _run(args):
 
                 specs = structural_matrix()
                 factory = StructuralEnvironment
+            elif args.stage == "semantic-transfer":
+                from .environments.semantic_transfer import SemanticEnvironment, semantic_matrix
+
+                specs = semantic_matrix(args.seeds)
+                factory = SemanticEnvironment
             policies = load_policies(checkpoints, planner, args.methods)
             try:
                 result = evaluate(
@@ -300,7 +309,13 @@ def _run(args):
                     specs,
                     args.output
                     or args.artifacts
-                    / ("structural-transfer" if args.stage == "transfer" else "evaluation"),
+                    / (
+                        "structural-transfer"
+                        if args.stage == "transfer"
+                        else "semantic-transfer"
+                        if args.stage == "semantic-transfer"
+                        else "evaluation"
+                    ),
                     progress,
                     lineage(checkpoints, specs, planner),
                     factory,

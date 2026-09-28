@@ -203,7 +203,7 @@ def create_app(
 
     app = FastAPI(
         title="Neuraxis local control",
-        version="0.1.0",
+        version="0.1.1",
         lifespan=lifespan,
         docs_url=None,
         redoc_url=None,

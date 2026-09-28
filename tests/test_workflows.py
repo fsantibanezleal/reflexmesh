@@ -47,6 +47,40 @@ def test_whole_recipe_is_validated_before_any_effect(tmp_path, bad):
     assert not (tmp_path / "never.txt").exists()
 
 
+@pytest.mark.parametrize("wrong", ["path", "digest"])
+def test_file_write_cannot_claim_an_unrelated_existing_postcondition(tmp_path, wrong):
+    (tmp_path / "existing.txt").write_text("approved")
+    forged = step("forged", "target.txt", "new content")
+    if wrong == "path":
+        forged["verify"] = step("existing", "existing.txt", "approved")["verify"]
+    else:
+        forged["verify"]["sha256"] = hashlib.sha256(b"approved").hexdigest()
+    with pytest.raises(ValueError, match="postcondition"):
+        execute_workflow({"schema_version": 1, "steps": [forged]}, tmp_path)
+    assert not (tmp_path / "target.txt").exists()
+
+
+def test_file_read_postcondition_is_bound_to_the_read_path(tmp_path):
+    (tmp_path / "source.txt").write_text("source")
+    (tmp_path / "other.txt").write_text("other")
+    recipe = {
+        "schema_version": 1,
+        "steps": [
+            {
+                "id": "read",
+                "tool": "file.read",
+                "arguments": {"path": "source.txt"},
+                "verify": {
+                    "path": "other.txt",
+                    "sha256": hashlib.sha256(b"other").hexdigest(),
+                },
+            }
+        ],
+    }
+    with pytest.raises(ValueError, match="operated path"):
+        execute_workflow(recipe, tmp_path)
+
+
 def test_cli_and_sdk_share_execution_contract(tmp_path):
     recipe = tmp_path / "recipe.json"
     recipe.write_text(

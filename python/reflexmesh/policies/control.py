@@ -355,12 +355,46 @@ class Metacontroller(DeferralPolicy):
         )
 
     def predict(self, observation):
-        # Urgent cancellation is handled while an affected-work proposal waits.
-        # The next poll invalidates the old plan; authority is always rechecked.
+        # These are observation prerequisites, not policy preferences. An urgent
+        # cancellation cannot act on a stale event, an unacknowledged duplicate,
+        # or a dependency that has not become available. Previously the urgent
+        # branch bypassed them and retried the same failed cancellation forever.
+        for flag, operation in (
+            ("stale", "refresh"),
+            ("duplicate", "ack_event"),
+            ("dependency_missing", "wait_dependency"),
+        ):
+            if not observation.state.get(flag):
+                continue
+            candidate = next(
+                (c for c in observation.admissible if c.arguments.get("operation") == operation),
+                None,
+            )
+            if self.pending is not None:
+                self.discards.append({"reason": "urgent_precondition", "origin": self.origin})
+                self.pending = None
+            self.fast.expected = None
+            if candidate is None:
+                return Decision(
+                    self.policy_id, None, "stop", reason="required_precondition_unavailable"
+                )
+            return Decision(
+                self.policy_id,
+                candidate.action_id,
+                reason="required_observation_precondition",
+                diagnostics={"precondition": flag},
+            )
+        # Cancellation can preempt an affected-work planner only after the
+        # observation prerequisites above have been resolved. Native authority
+        # and resource revisions are still checked again at execution.
         urgent = next(
             (c for c in observation.admissible if c.arguments.get("operation") == "cancel"), None
         )
         if urgent and observation.state.get("cancel_requested"):
+            if self.pending is not None:
+                self.discards.append({"reason": "urgent_cancellation", "origin": self.origin})
+                self.pending = None
+            self.fast.expected = None
             return Decision(
                 self.policy_id, urgent.action_id, reason="urgent_cancellation_during_deliberation"
             )
