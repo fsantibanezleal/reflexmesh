@@ -72,6 +72,8 @@ class RunManager:
 
     def _execute(self, run: Run) -> None:
         from .environments import CaseSpec
+        from .environments.semantic_transfer import SemanticEnvironment, SemanticSpec
+        from .environments.software import SoftwareEnvironment
         from .evaluation.runner import run_episode
         from .pipeline import make_policy
 
@@ -81,12 +83,14 @@ class RunManager:
                 run.status = "running"
             factory = self.policy_factory or make_policy
             policy = factory(run.request["method_id"], self.checkpoints, planner=self.planner)
-            spec = CaseSpec(
+            semantic = run.request.get("suite", "core") == "semantic_transfer"
+            spec_type = SemanticSpec if semantic else CaseSpec
+            spec = spec_type(
                 run.request["case_id"],
                 run.request["variant"],
                 run.request["seed"],
-                "test",
-                max_steps=run.request["parameters"].get("max_steps", 16),
+                "semantic_transfer" if semantic else "test",
+                max_steps=run.request["parameters"].get("max_steps", 12 if semantic else 16),
             )
 
             def on_step(event, decision):
@@ -100,8 +104,11 @@ class RunManager:
                 run.request["parameters"],
                 on_step=on_step,
                 cancel_event=run.cancellation,
+                environment_factory=SemanticEnvironment if semantic else SoftwareEnvironment,
             )
             result["run_id"] = run.run_id
+            result["provenance"]["execution_origin"] = "fresh-local"
+            result["provenance"]["suite"] = run.request.get("suite", "core")
             with self._lock:
                 run.result = result
                 run.status = "cancelled" if run.cancellation.is_set() else result["status"]
@@ -182,7 +189,9 @@ def create_app(
     from fastapi.staticfiles import StaticFiles
     from starlette.middleware.trustedhost import TrustedHostMiddleware
 
+    from . import __version__
     from .environments import CASES, VARIANTS
+    from .environments.semantic_transfer import PROGRAMS
     from .policies import METHODS
 
     auth_token = token or secrets.token_urlsafe(32)
@@ -203,7 +212,7 @@ def create_app(
 
     app = FastAPI(
         title="Neuraxis local control",
-        version="0.1.1",
+        version=__version__,
         lifespan=lifespan,
         docs_url=None,
         redoc_url=None,
@@ -253,6 +262,20 @@ def create_app(
             "cases": [
                 {"id": k, "name": v[0], "description": v[2], "variants": list(VARIANTS)}
                 for k, v in CASES.items()
+            ],
+            "suites": [
+                {
+                    "id": "core",
+                    "cases": list(CASES),
+                    "variants": list(VARIANTS),
+                    "max_seed": 2**31 - 1,
+                },
+                {
+                    "id": "semantic_transfer",
+                    "cases": list(PROGRAMS),
+                    "variants": ["nominal", "boundary"],
+                    "max_seed": 999999,
+                },
             ],
             "capabilities": ["owned-real-software", "native-authority", "replay", "cancellation"],
             "local_auth_required": True,
@@ -357,16 +380,24 @@ def create_app(
     @app.post("/api/run")
     async def run(request: Request):
         value = await body(request)
-        if set(value) - {"case_id", "method_id", "variant", "seed", "parameters"}:
+        if set(value) - {"suite", "case_id", "method_id", "variant", "seed", "parameters"}:
             raise HTTPException(422, "unknown run fields")
-        value = {"variant": "nominal", "seed": 40000, "parameters": {}, **value}
+        value = {"suite": "core", "variant": "nominal", "seed": 40000, "parameters": {}, **value}
+        suite = value["suite"]
+        if not isinstance(suite, str) or suite not in {"core", "semantic_transfer"}:
+            raise HTTPException(422, "unknown workload suite")
+        semantic = suite == "semantic_transfer"
+        if any(not isinstance(value.get(key), str) for key in ("case_id", "method_id", "variant")):
+            raise HTTPException(422, "method, case and variant must be strings")
         if (
-            value.get("case_id") not in CASES
+            value.get("case_id") not in (PROGRAMS if semantic else CASES)
             or value.get("method_id") not in METHODS
-            or value["variant"] not in VARIANTS
+            or value["variant"] not in (("nominal", "boundary") if semantic else VARIANTS)
         ):
             raise HTTPException(422, "unknown method, case or variant")
-        if type(value["seed"]) is not int or not 0 <= value["seed"] <= 2**31 - 1:
+        if type(value["seed"]) is not int or not 0 <= value["seed"] <= (
+            999999 if semantic else 2**31 - 1
+        ):
             raise HTTPException(422, "seed must be a bounded integer")
         parameters = value["parameters"]
         if not isinstance(parameters, dict) or set(parameters) - {"max_steps"}:
@@ -438,7 +469,7 @@ def create_app(
             candidate = (root / path).resolve()
             if candidate.is_relative_to(root) and candidate.is_file():
                 return FileResponse(candidate)
-            if path.startswith(("api/", "data/")):
+            if path.startswith(("api/", "data/")) or Path(path).suffix:
                 raise HTTPException(404, "not found")
             return FileResponse(root / "index.html")
 
