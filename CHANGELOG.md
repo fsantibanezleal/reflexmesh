@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.01.002 - 2026-10-08
+
+- Expose authenticated core/semantic_transfer suite discovery and native execution, retaining independent file truth and fresh-run provenance.
+- Reject malformed suite identity and prevent SPA fallback from masking missing assets.
+- Document semantic execution boundaries and preserve the frozen research matrices.
+
 ## 0.01.001 - 2026-09-28
 
 ### Fixed
